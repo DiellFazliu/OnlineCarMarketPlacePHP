@@ -40,17 +40,18 @@ body {
 .shape:first-child {
     height: 300px;
     width: 300px;
-    background: rgb(141, 224, 32);
-    background: linear-gradient(180deg, rgba(141, 224, 2, 1) 0%, rgba(190, 240, 0, 1) 100%);
+    background: rgb(255, 255, 255,0.2);
+    background: linear-gradient(180deg, rgba(230, 230, 230, 0.3) 0%, rgba(203, 203, 203, 0.3) 100%);
     left: -180px;
     top: -80px;
+
 }
 
 .shape:last-child {
     height: 200px;
     width: 200px;
-    background: rgb(141, 224, 32);
-    background: linear-gradient(180deg, rgba(141, 224, 2, 1) 0%, rgba(190, 240, 0, 1) 100%);
+    background: rgb(255, 255, 255,0.2);
+    background: linear-gradient(180deg, rgba(230, 230, 230, 0.3) 0%, rgba(203, 203, 203, 0.3) 100%);
     right: -30px;
     bottom: -80px;
 }
@@ -72,7 +73,7 @@ form {
 }
 
 form * {
-    color: #ffffff;
+    color: rgb(141, 224, 32);
     letter-spacing: 0.5px;
     outline: none;
     border: none;
@@ -100,9 +101,10 @@ label {
 
 input {
     display: block;
+    color: rgb(66, 66, 66);
     height: 50px;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: rgba(104, 102, 102, 0.07);
     border-radius: 3px;
     border: 1px solid white;
     border-radius: 8px;
@@ -201,7 +203,7 @@ input[type="submit"]:hover, input[type="reset"]:hover {
     left: 3%;
     top: 50%;
     transform: translateY(-50%);
-    color: rgb(141, 224, 32);
+    color: rgb(255, 255, 255);
     text-align: left;
 }
 
