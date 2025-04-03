@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSphere | Login Form</title>
+    <link rel="stylesheet" href="all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .input-error {
+            border: 1px solid red;
+        }
+
+        .active {
+            opacity: 0.7;
+        }
+        @media (max-width: 480px) {
+    body {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: auto;
+        padding: 0 20px;
+    }
+
+    .background {
+        width: 100%;
+        height: auto;
+        position: static;
+        transform: none;
+        margin: 20px 0;
+    }
+
+    .background .shape:first-child {
+        height: 100px;
+        width: 100px;
+        left: -50px;
+        top: 0;
+    }
+
+    .background .shape:last-child {
+        height: 100px;
+        width: 100px;
+        right: -20px;
+        bottom: 0;
+    }
+
+    form {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        top: auto;
+        left: auto;
+        margin: 20px 0;
+        transform: none;
+        padding: 30px 20px;
+    }
+
+    form h3 {
+        font-size: 24px;
+    }
+
+    .login-subtitle {
+        font-size: 14px;
+    }
+
+    input {
+        height: 45px;
+        font-size: 13px;
+    }
+
+    #button {
+        padding: 12px 0;
+        font-size: 16px;
+    }
+
+    .text-section {
+        position: static;
+        transform: none;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .text-section h1 {
+        font-size: 32px;
+        margin-bottom: 15px;
+    }
+
+    .text-section p {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .logo-wrapper {
+
+        padding: 10px 0;
+        padding-left: 45px;
+    }
+
+    .logo {
+        width: 150px;
+        transform: translateX(-15px);
+    }
+
+    .name {
+        display: none;
+    }
+    .text-section{
+        display: none;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div class="logo-wrapper">
+        <a href="project.html"><img src="logo.png" class="logo"></a>
+        <div class="name">AUTOSPHERE</div>
+    </div>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form onsubmit="validate(event)">
+        <h3>Login</h3>
+        <div class="login-subtitle">Glad you're back!</div>
+
+        <input type="text" placeholder="Username" id="username">
+        <div id="usernameError" class="error-message">Username must contain a dot.</div>
+
+        <input type="password" placeholder="Password" id="password">
+        <div id="passwordError" class="error-message">Password must be 8-16 characters long.</div>
+
+        <div class="remember-me">
+            <input type="checkbox" id="rememberMe">
+            <label for="rememberMe">Remember me</label>
+        </div>
+        <input id="button" type="submit" value="Login">
+
+        <div class="forgot-password">
+            <a href="#">Forgot password?</a>
+        </div>
+        <div class="or">
+            <span>Or</span>
+        </div>
+        <div class="social">
+            <div class="go"><i class="fab fa-google"></i></div>
+            <div class="fb"><i class="fab fa-facebook"></i></div>
+            <div class="gh"><i class="fab fa-github"></i></div>
+        </div>
+<div class="sign-up">
+            Don't have an account? <a href="/register.html"> <br> Sign up</a>
+        </div>
+    </form>
+
+    <div id="platform-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 style="text-align: center;">Login to Platform</h3>
+            <label for="platform-username">Username</label>
+            <input type="text" id="platform-username" placeholder="Username">
+            <div id="platform-username-error" class="error-message">Username must contain a dot.</div>
+            <label for="platform-password">Password</label>
+            <input type="password" id="platform-password" placeholder="Password">
+            <div id="platform-password-error" class="error-message">Password must be between 8-16 characters long.</div>
+            <input id="modal-signup-button" type="submit" value="Sign Up">
+        </div>
+    </div>
+
+    <div class="text-section">
+        <h1>Drive Your Dream Car Today</h1>
+        <p>Log in to explore top car listings,<br>
+            manage your profile, and find exclusive offers.</p>
+    </div>
+
+    <script>
+        const modal = document.getElementById("platform-modal");
+        const closeModal = document.querySelector(".close-modal");
+
+        document.querySelectorAll(".social div").forEach(icon => {
+            icon.addEventListener("click", event => {
+                const platformName = event.currentTarget.classList.contains("fb")
+                    ? "Facebook"
+                    : event.currentTarget.classList.contains("gh")
+                        ? "Github"
+                        : "Google";
+                
+                modal.querySelector("h3").textContent = `Login with ${platformName}`;
+                modal.style.display = "block"; 
+                document.body.classList.add("modal-active");
+            });
+        });
+
+        closeModal.addEventListener("click", () => {
+            modal.style.display = "none";
+            document.body.classList.remove("modal-active");
+        });
+
+        window.addEventListener("click", event => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+                document.body.classList.remove("modal-active");
+            }
+        });
+
+        function validate(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+
+            resetErrors();
+
+            let invalid = false;
+
+            if (!username) {
+                showError("username", "Username cannot be empty.");
+                invalid = true;
+            } else if (!username.includes(".")) {
+                showError("username", "Username must contain a dot.");
+                invalid = true;
+            }
+
+            if (password.length < 8) {
+                showError("password", "Password must be at least 8 characters long.");
+                invalid = true;
+            } else if (password.length > 16) {
+                showError("password", "Password must be less than 16 characters long.");
+                invalid = true;
+            }
+
+            if (!invalid) {
+                window.location.href = "project.html"; 
+            }
+        }
+
+        function showError(inputId, errorMessage) {
+            const inputElement = document.getElementById(inputId);
+            const errorElement = document.getElementById(inputId + "Error");
+
+            inputElement.classList.add("input-error");
+            errorElement.textContent = errorMessage;
+            errorElement.style.display = "block";
+        }
+
+        function resetErrors() {
+            document.querySelectorAll("input").forEach(input => {
+                input.classList.remove("input-error");
+                const errorElement = document.getElementById(input.id + "Error");
+                if (errorElement) {
+                    errorElement.style.display = "none";
+                }
+            });
+        }
+
+        document.getElementById("modal-signup-button").addEventListener("click", event => {
+            event.preventDefault();
+
+            const modalUsername = document.getElementById("platform-username").value.trim();
+            const modalPassword = document.getElementById("platform-password").value;
+
+            resetModalErrors();
+
+            let modalInvalid = false;
+
+            if (!modalUsername) {
+                showModalError("platform-username", "Username cannot be empty.");
+                modalInvalid = true;
+            } else if (!modalUsername.includes(".")) {
+                showModalError("platform-username", "Username must contain a dot.");
+                modalInvalid = true;
+            }
+
+            if (modalPassword.length < 8) {
+                showModalError("platform-password", "Password must be at least 8 characters long.");
+                modalInvalid = true;
+            } else if (modalPassword.length > 16) {
+                showModalError("platform-password", "Password must be less than 16 characters long.");
+                modalInvalid = true;
+            }
+
+            if (!modalInvalid) {
+                window.location.href = "project.html"; 
+                modal.style.display = "none"; 
+                document.body.classList.remove("modal-active");
+            }
+        });
+
+        function showModalError(inputId, errorMessage) {
+            const inputElement = document.getElementById(inputId);
+            const errorElement = document.getElementById(inputId + "-error");
+
+            inputElement.classList.add("input-error");
+            errorElement.textContent = errorMessage;
+            errorElement.style.display = "block";
+        }
+
+        function resetModalErrors() {
+            document.querySelectorAll(".modal-content input").forEach(input => {
+                input.classList.remove("input-error");
+                const errorElement = document.getElementById(input.id + "-error");
+                if (errorElement) {
+                    errorElement.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
