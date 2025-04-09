@@ -13,8 +13,7 @@
     flex-wrap: wrap; 
 }
 .icons {
-    width: 8%;
-    max-width: 50px;
+    max-width: 55px;
     transition: transform 0.3s ease, opacity 0.3s ease; 
     cursor: pointer; 
 }

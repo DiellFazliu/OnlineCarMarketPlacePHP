@@ -13,6 +13,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', sans-serif;
+            background-image: url('bmw-3-0-csl-mi-05.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        form {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(0.1px);
+            -webkit-backdrop-filter: blur(10px);
+            width: 400px;
+            padding: 40px;
+            border-radius: 10px;
+            border: none;
+            margin: auto;   
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
         .error-message {
             color: red;
             font-size: 12px;
@@ -32,15 +66,15 @@
 
 <body>
     <div class="logo-wrapper">
-        <a href="project.html"><img src="logo.png" class="logo"></a>
-        <div class="name">AUTOSPHERE</div>
+            <a href="project.html"><img src="logo1.png" class="logo" style="padding-top: 4px; "></a>
+            <div class="name" style="color: white; font-weight: bold; font-size: 24px;">AUTOSPHERE</div>
     </div>
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
     <form onsubmit="validate(event)">
-        <h3 class="register-title" style="text-align: center;">Sign Up</h3>
+        <h3 class="register-title" style="text-align: center;text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);"">Sign Up</h3>
         <div class="sing-up-subtitle">Just some details to get you in.!</div>
 
         <label for="username"></label>
@@ -71,11 +105,11 @@
         </div>
     
         </div>
-        <div class="sign-up">
+        <div class="sign-up" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">
             Already Registered <a href="/login.html"> <br> Login</a>
         </div>
     </form>
-    <div class="text-section">
+    <div class="text-section" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
         <h1>Welcome to our Page!</h1>
         <p>Sign up through a platform to enjoy all our services</p>
         <div class="register-icons">
