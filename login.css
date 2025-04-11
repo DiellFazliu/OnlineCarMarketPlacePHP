@@ -156,7 +156,6 @@ input[type="submit"]:hover, input[type="reset"]:hover {
 }
 
 .or {
-    margin-top: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -168,36 +167,11 @@ input[type="submit"]:hover, input[type="reset"]:hover {
     flex: 1;
     height: 1px;
     background: #ffffff;
-    margin: 0 10px;
 }
 
 .or span {
     font-size: 14px;
 }
-
-.social {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.social div {
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.27);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #eaf0fb;
-    cursor: pointer;
-}
-
-.social div:hover {
-    background-color: rgba(255, 255, 255, 0.47);
-}
-
 .text-section {
     position: absolute;
     left: 3%;
@@ -218,7 +192,6 @@ input[type="submit"]:hover, input[type="reset"]:hover {
 }
 
 .sign-up {
-    margin-top: 20px;
     text-align: center;
 }
 

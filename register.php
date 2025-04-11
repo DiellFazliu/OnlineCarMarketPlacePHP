@@ -1,276 +1,280 @@
+<?php
+session_start();
+
+define("MIN_PASSWORD_LENGTH", 8);
+define("MAX_PASSWORD_LENGTH", 16);
+
+$username_pattern = '/^[a-zA-Z0-9]+$/';
+$email_pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+$password_pattern = '/^[a-zA-Z0-9!@#$%^&*()_+]{8,16}$/';
+
+$users = [
+    'Diell' => [
+        'email' => 'diell@gmail.com',
+        'password' => password_hash('12345678', PASSWORD_DEFAULT)
+    ]
+];
+
+class UserRegistration {
+    private $username;
+    private $email;
+    private $password;
+    private $confirmPassword;
+    
+    public function __construct($username, $email, $password, $confirmPassword) {
+        $this->username = $username;
+        $this->email = $email;
+        $this->password = $password;
+        $this->confirmPassword = $confirmPassword;
+    }
+    
+    public function validateInput() {
+        global $username_pattern, $email_pattern, $password_pattern;
+        
+        $errors = [];
+        
+        if (empty($this->username)) {
+            $errors['username'] = "Username cannot be empty";
+        } elseif (!preg_match($username_pattern, $this->username)) {
+            $errors['username'] = "Username can only contain letters and numbers";
+        }
+        
+        if (empty($this->email)) {
+            $errors['email'] = "Email cannot be empty";
+        } elseif (!preg_match($email_pattern, $this->email)) {
+            $errors['email'] = "Invalid email format";
+        }
+        
+        if (empty($this->password)) {
+            $errors['password'] = "Password cannot be empty";
+        } elseif (!preg_match($password_pattern, $this->password)) {
+            $errors['password'] = "Password must be 8-16 characters long";
+        }
+        
+        if (empty($this->confirmPassword)) {
+            $errors['confirmPassword'] = "Please confirm your password";
+        } elseif ($this->password !== $this->confirmPassword) {
+            $errors['confirmPassword'] = "Passwords do not match";
+        }
+        
+        return $errors;
+    }
+    
+    public function register(&$users) {
+        if (array_key_exists($this->username, $users)) {
+            return false;
+        }
+        
+        $users[$this->username] = [
+            'email' => $this->email,
+            'password' => password_hash($this->password, PASSWORD_DEFAULT)
+        ];
+        return true;
+    }
+}
+
+$errors = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $confirmPassword = $_POST['confirmPassword'] ?? '';
+    
+    $registration = new UserRegistration($username, $email, $password, $confirmPassword);
+    $errors = $registration->validateInput();
+    
+    if (empty($errors)) {
+        if ($registration->register($users)) {
+            $_SESSION['user'] = $username;
+            header('Location: project.php');
+            exit();
+        } else {
+            $errors['username'] = "Username already exists";
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoSphere| Register Form</title>
+    <title>AutoSphere | Register Form</title>
     <link rel="stylesheet" href="all.css" />
-    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap" rel="stylesheet">
+
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans', sans-serif;
+            background-image: url('bmw-3-0-csl-mi-05.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
         .error-message {
             color: red;
             font-size: 12px;
             margin-top: 5px;
-            display: none;
         }
 
         .input-error {
             border: 1px solid red;
         }
 
-        .active {
-            opacity: 0.7;
+        .logo-wrapper {
+            display: flex;
+            align-items: center; 
+            justify-content: flex-start;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            gap: 10px; 
+            padding: 10px 20px;
+            z-index: 1000;
+        }
+        
+        .name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            color: rgb(255, 255, 255);
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            width: 400px;
+            padding: 40px;
+            border-radius: 10px;
+            border: none;
+            margin: auto;   
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .social div {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .social div:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                overflow: auto;
+                padding: 0 20px;
+            }
+
+            form {
+                width: 100%;
+                max-width: 350px;
+                height: auto;
+                margin: 20px 0;
+                padding: 30px 20px;
+            }
+
+            .logo-wrapper {
+                padding: 10px 0;
+                padding-left: 45px;
+            }
+
+            .logo {
+                width: 150px;
+                transform: translateX(-15px);
+            }
+
+            .name {
+                display: none;
+            }
+            
+            .text-section {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="logo-wrapper">
-        <a href="project.html"><img src="logo.png" class="logo"></a>
-        <div class="name">AUTOSPHERE</div>
+        <a href="project.php"><img src="logo1.png" class="logo" style="padding-top: 4px;"></a>
+        <div class="name" style="color: white; font-weight: bold; font-size: 24px;">AUTOSPHERE</div>
     </div>
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form onsubmit="validate(event)">
-        <h3 class="register-title" style="text-align: center;">Sign Up</h3>
-        <div class="sing-up-subtitle">Just some details to get you in.!</div>
+    
+    <form method="POST">
+        <h3 class="register-title" style="text-align: center;text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">Sign Up</h3>
+        <div class="sing-up-subtitle" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">Just some details to get you in!</div>
 
-        <label for="username"></label>
-        <input type="text" placeholder="Username" id="username">
-        <div id="usernameError" class="error-message">Username must contain a dot.</div>
+        <input type="text" placeholder="Username" id="username" name="username" 
+               value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
+               class="<?php echo isset($errors['username']) ? 'input-error' : ''; ?>">
+        <?php if (isset($errors['username'])): ?>
+            <div class="error-message"><?php echo $errors['username']; ?></div>
+        <?php endif; ?>
 
-        <label for="email"></label>
-        <input type="email" placeholder="Email" id="email">
-        <div id="emailError" class="error-message">Invalid email format.</div>
+        <input type="email" placeholder="Email" id="email" name="email"
+               value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
+               class="<?php echo isset($errors['email']) ? 'input-error' : ''; ?>">
+        <?php if (isset($errors['email'])): ?>
+            <div class="error-message"><?php echo $errors['email']; ?></div>
+        <?php endif; ?>
 
-        <label for="password"></label>
-        <input type="password" placeholder="Password" id="password">
-        <div id="passwordError" class="error-message">Password must be between 8-16 characters long.</div>
+        <input type="password" placeholder="Password" id="password" name="password"
+               class="<?php echo isset($errors['password']) ? 'input-error' : ''; ?>">
+        <?php if (isset($errors['password'])): ?>
+            <div class="error-message"><?php echo $errors['password']; ?></div>
+        <?php endif; ?>
 
-        <label for="confirmPassword"></label>
-        <input type="password" placeholder="Confirm Password" id="confirmPassword">
-        <div id="confirmPasswordError" class="error-message">Passwords do not match.</div>
+        <input type="password" placeholder="Confirm Password" id="confirmPassword" name="confirmPassword"
+               class="<?php echo isset($errors['confirmPassword']) ? 'input-error' : ''; ?>">
+        <?php if (isset($errors['confirmPassword'])): ?>
+            <div class="error-message"><?php echo $errors['confirmPassword']; ?></div>
+        <?php endif; ?>
 
         <button id="button" type="submit">Sign Up</button>
 
-        <div class="or">
-            <span>Or</span>
+        <div>
+            <span class="or">Already Registered</span>
+            <div class="sign-up" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">
+         <a href="login.php">Login</a>
         </div>
-        <div class="social">
-            <div class="go"><i class="fab fa-google"></i></div>
-            <div class="fb"><i class="fab fa-facebook"></i></div>
-            <div class="gh"><i class="fab fa-github"></i></div>
         </div>
     
-        </div>
-        <div class="sign-up">
-            Already Registered <a href="/login.html"> <br> Login</a>
-        </div>
     </form>
-    <div class="text-section">
+
+    <div class="text-section" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
         <h1>Welcome to our Page!</h1>
-        <p>Sign up through a platform to enjoy all our services</p>
-        <div class="register-icons">
-            <img class="icons" src="apple.png" />
-            <img class="icons" src="android.png" />
-            <img class="icons" src="google.png" />
-        </div>
+        <p>Sign up to enjoy all our services</p>
     </div>
-
-    <div id="platform-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h3 style="text-align: center;">Login to Platform</h3>
-            <label for="platform-username">Username</label>
-            <input type="text" id="platform-username" placeholder="Username">
-            <div id="platform-username-error" class="error-message">Username must contain a dot.</div>
-            <label for="platform-password">Password</label>
-            <input type="password" id="platform-password" placeholder="Password">
-            <div id="platform-password-error" class="error-message">Password must be between 8-16 characters long.</div>
-            <input id="modal-signup-button" type="submit" value="Sign Up">
-        </div>
-    </div>
-
-    <script>
-        const modal = document.getElementById("platform-modal");
-        const closeModal = document.querySelector(".close-modal");
-
-        document.querySelectorAll(".register-icons img, .social div").forEach(icon => {
-            icon.addEventListener("click", event => {
-                modal.style.display = "block"; 
-                document.body.classList.add("modal-active");
-
-                const modalTitle = modal.querySelector("h3");
-                const clickedIcon = event.target;
-
-                if (clickedIcon.classList.contains("fa-google")) {
-                    modalTitle.textContent = "Login with Google";
-                } else if (clickedIcon.classList.contains("fa-facebook")) {
-                    modalTitle.textContent = "Login with Facebook";
-                } else if (clickedIcon.classList.contains("fa-github")) {
-                    modalTitle.textContent = "Login with GitHub";
-                } else {
-                    modalTitle.textContent = "Sign Up through Platform";
-                }
-            });
-        });
-
-
-        closeModal.addEventListener("click", () => {
-            modal.style.display = "none";
-            document.body.classList.remove("modal-active");
-        });
-
-        window.addEventListener("click", event => {
-            if (event.target === modal) {
-                modal.style.display = "none";
-                document.body.classList.remove("modal-active");
-            }
-        });
-
-
-        document.querySelectorAll(".register-icons img, .social div").forEach(icon => {
-            icon.addEventListener("click", () => {
-                document.querySelectorAll(".register-icons img, .social div").forEach(i => i.classList.remove("active"));
-                icon.classList.add("active");
-            });
-        });
-
-
-        function validate(event) {
-            event.preventDefault(); 
-
-      
-            var username = document.getElementById("username").value.trim();
-            var email = document.getElementById("email").value.trim();
-            var password = document.getElementById("password").value;
-            var confirmPassword = document.getElementById("confirmPassword").value;
-
-            resetErrors();
-
-            var invalid = false;
-
-            if (username.length === 0) {
-                showError("username", "Username cannot be empty.");
-                invalid = true;
-            } else if (username.indexOf(".") === -1) {
-                showError("username", "Username must contain a dot.");
-                invalid = true;
-            }
-
-            if (email.length === 0) {
-                showError("email", "Email cannot be empty.");
-                invalid = true;
-            } else if (!email.includes("@") || email.split("@")[1].split(".").length <= 1) {
-                showError("email", "Email format is incorrect.");
-                invalid = true;
-            }
-
-            if (password.length < 8) {
-                showError("password", "Password must be at least 8 characters long.");
-                invalid = true;
-            } else if (password.length > 16) {
-                showError("password", "Password must be less than 16 characters long.");
-                invalid = true;
-            }
-
-            if (password !== confirmPassword) {
-                showError("confirmPassword", "Passwords do not match.");
-                invalid = true;
-            }
-
-            if (invalid) {
-                return false;
-            } else {
-                window.location.href = "project.html";
-            }
-        }
-
-        function showError(inputId, errorMessage) {
-            const inputElement = document.getElementById(inputId);
-            const errorElement = document.getElementById(inputId + "Error");
-
-            inputElement.classList.add("input-error");
-            errorElement.textContent = errorMessage;
-            errorElement.style.display = "block";
-        }
-
-        function resetErrors() {
-            const inputs = document.querySelectorAll("input");
-            inputs.forEach(input => {
-                input.classList.remove("input-error");
-                const errorElement = document.getElementById(input.id + "Error");
-                if (errorElement) {
-                    errorElement.style.display = "none";
-                }
-            });
-        }
-
-
-document.getElementById("modal-signup-button").addEventListener("click", event => {
-    event.preventDefault(); 
-
-
-    const modalUsername = document.getElementById("platform-username").value.trim();
-    const modalPassword = document.getElementById("platform-password").value;
-
-    resetModalErrors();
-
-    let modalInvalid = false;
-
-    if (modalUsername.length === 0) {
-        showModalError("platform-username", "Username cannot be empty.");
-        modalInvalid = true;
-    } else if (modalUsername.indexOf(".") === -1) {
-        showModalError("platform-username", "Username must contain a dot.");
-        modalInvalid = true;
-    }
-
-    if (modalPassword.length < 8) {
-        showModalError("platform-password", "Password must be at least 8 characters long.");
-        modalInvalid = true;
-    } else if (modalPassword.length > 16) {
-        showModalError("platform-password", "Password must be less than 16 characters long.");
-        modalInvalid = true;
-    }
-
-
-    if (!modalInvalid) {
-        window.location.href = "project.html"; 
-        modal.style.display = "none"; 
-        document.body.classList.remove("modal-active");
-    }
-});
-
-
-        function showModalError(inputId, errorMessage) {
-            const inputElement = document.getElementById(inputId);
-            const errorElement = document.getElementById(inputId + "-error");
-
-            inputElement.classList.add("input-error");
-            errorElement.textContent = errorMessage;
-            errorElement.style.display = "block";
-        }
-
-        function resetModalErrors() {
-            const modalInputs = document.querySelectorAll(".modal-content input");
-            modalInputs.forEach(input => {
-                input.classList.remove("input-error");
-                const errorElement = document.getElementById(input.id + "-error");
-                if (errorElement) {
-                    errorElement.style.display = "none";
-                }
-            });
-        }
-    </script>
 </body>
-
 </html>
