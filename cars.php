@@ -456,7 +456,7 @@
 <body>
     <div id="Banner"></div>
     <script>
-        fetch('./../banner.html')
+        fetch('banner.php')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('Banner').innerHTML = data;
@@ -632,7 +632,7 @@
     </div>
     </div>
     <div class="listings-custom" style="flex: 1 1 60%;">
-        <a href="A3-preview.html" class="card-link">
+        <a href="A3-preview.php" class="card-link">
             <div class="card-custom">
                 <img src="Audi/A3/normal/a.jfif" alt="Audi A3">
                 <div class="details-custom">

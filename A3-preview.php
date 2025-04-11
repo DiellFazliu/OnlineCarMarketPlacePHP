@@ -404,7 +404,7 @@
 <body>
     <div id="header" style="position: absolute; top: auto; left: auto;width: 100%; padding: 10px 0;"></div>
     <script>
-        fetch('./../banner.html') // Kontrolloni rrugën
+        fetch('banner.php') // Kontrolloni rrugën
             .then(response => {
                 if (!response.ok) throw new Error("Failed to fetch banner.html");
                 return response.text();
@@ -433,23 +433,23 @@
     <p id="titulli">Audi A3 00Km</p>
     <div class="logos">
         <div>
-            <img class="logot" src="../car-logos/engine.png">
+            <img class="logot" src="car-logos/engine.png">
             <p>2.5 (320Hp)</p>
         </div>
         <div>
-            <img class="logot" src="../car-logos/transmission.png">
+            <img class="logot" src="car-logos/transmission.png">
             <p>Automatic</p>
         </div>
         <div>
-            <img class="logot" src="../car-logos/fuel.png">
+            <img class="logot" src="car-logos/fuel.png">
             <p>Benzin</p>
         </div>
         <div>
-            <img class="logot" src="../car-logos/road.png">
+            <img class="logot" src="car-logos/road.png">
             <p>00km</p>
         </div>
         <div>
-            <img class="logot" src="../car-logos/calendar.png">
+            <img class="logot" src="car-logos/calendar.png">
             <p>03/2024</p>
         </div>
     </div>
@@ -458,22 +458,22 @@
         <div class="left-content">
             <div class="left-content-up">
                 <div class="slideshow">
-                    <img src="../Audi/A3/normal/a.jfif" alt="Slide 1" class="active" onclick="openSlide(1)">
-                    <img src="../Audi/A3/normal/a1.jfif" alt="Slide 2" onclick="openSlide(2)">
-                    <img src="../Audi/A3/normal/a2.jfif" alt="Slide 3" onclick="openSlide(3)">
-                    <img src="../Audi/A3/normal/a3.jfif" alt="Slide 4" onclick="openSlide(4)">
-                    <img src="../Audi/A3/normal/a4.jfif" alt="Slide 5" onclick="openSlide(5)">
-                    <img src="../Audi/A3/normal/a5.jfif" alt="Slide 6" onclick="openSlide(6)">
-                    <img src="../Audi/A3/normal/a6.jfif" alt="Slide 7" onclick="openSlide(7)">
-                    <img src="../Audi/A3/normal/a7.jfif" alt="Slide 8" onclick="openSlide(8)">
-                    <img src="../Audi/A3/normal/a8.jfif" alt="Slide 9" onclick="openSlide(9)">
-                    <img src="../Audi/A3/normal/a9.jfif" alt="Slide 10" onclick="openSlide(10)">
-                    <img src="../Audi/A3/normal/a10.jfif" alt="Slide 11" onclick="openSlide(11)">
+                    <img src="Audi/A3/normal/a.jfif" alt="Slide 1" class="active" onclick="openSlide(1)">
+                    <img src="Audi/A3/normal/a1.jfif" alt="Slide 2" onclick="openSlide(2)">
+                    <img src="Audi/A3/normal/a2.jfif" alt="Slide 3" onclick="openSlide(3)">
+                    <img src="Audi/A3/normal/a3.jfif" alt="Slide 4" onclick="openSlide(4)">
+                    <img src="Audi/A3/normal/a4.jfif" alt="Slide 5" onclick="openSlide(5)">
+                    <img src="Audi/A3/normal/a5.jfif" alt="Slide 6" onclick="openSlide(6)">
+                    <img src="Audi/A3/normal/a6.jfif" alt="Slide 7" onclick="openSlide(7)">
+                    <img src="Audi/A3/normal/a7.jfif" alt="Slide 8" onclick="openSlide(8)">
+                    <img src="Audi/A3/normal/a8.jfif" alt="Slide 9" onclick="openSlide(9)">
+                    <img src="Audi/A3/normal/a9.jfif" alt="Slide 10" onclick="openSlide(10)">
+                    <img src="Audi/A3/normal/a10.jfif" alt="Slide 11" onclick="openSlide(11)">
                 </div>
                 
                 <script>
                     function openSlide(slideNumber) {
-                        const baseUrl = "A3-slideshow.html";
+                        const baseUrl = "A3-slideshow.php";
                         const fullUrl = `${baseUrl}?slide=${slideNumber}`;
                         window.location.href = fullUrl;
                     }
@@ -525,17 +525,17 @@
             </div>
             <div class="guarantee-section">
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>Kthim të parave</h3>
                     <p>Nëse nuk ju pëlqen vetura, kthejeni brenda 14 ditëve.</p>
                 </div>
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>Blerje e sigurt</h3>
                     <p>Ne garantojmë gjendjen teknike të çdo veture.</p>
                 </div>
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>6 muaj garancion</h3>
                     <p>Ofrojmë çdo veturë me garancion.</p>
                     <a href="#">Më shumë rreth garancive &rarr;</a>
@@ -566,7 +566,7 @@
 
 <script>
   function redirect() {
-    window.location.href = "payment.html";
+    window.location.href = "payment.php";
   }
 </script>
                     <div class="financing">Financim 300 €/muaj</div>
