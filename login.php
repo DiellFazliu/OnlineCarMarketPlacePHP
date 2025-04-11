@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div style="padding-top:10px;text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">
             <span class="or" >Don't have an account?</span>
             <div class="sign-up">
-             <a href="/register.php"> <br> Sign up</a>
+             <a href="register.php"> <br> Sign up</a>
         </div>
         </div>
 
