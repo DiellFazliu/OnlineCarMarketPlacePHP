@@ -634,7 +634,7 @@
     <div class="listings-custom" style="flex: 1 1 60%;">
         <a href="A3-preview.html" class="card-link">
             <div class="card-custom">
-                <img src="../Audi/A3/normal/a.jfif" alt="Audi A3">
+                <img src="Audi/A3/normal/a.jfif" alt="Audi A3">
                 <div class="details-custom">
                     <h4>Audi A3 00KM</h4>
                     <p>00 km | 03/2024 | 320 hp | Automatic | Benzin</p>
@@ -653,7 +653,7 @@
         
         <a href="A3Coupe-preview.html" class="card-link">
             <div class="card-custom">
-                <img src="../Audi/A3/kabriolet/a.jfif" alt="Audi A3 Coupe">
+                <img src="Audi/A3/kabriolet/a.jfif" alt="Audi A3 Coupe">
                 <div class="details-custom">
                     <h4>Audi A3 Coupe 200hp</h4>
                     <p>123,500 km | 03/2019 | 200hp(Stage 1) | Automatic | Diesel</p>
