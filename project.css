@@ -97,7 +97,7 @@ body{
 }
 
 .Menu::-webkit-scrollbar-thumb {
-    background: #888; /* Thumb color */
+    background: #888;
     border-radius: 4px;
 }
 
