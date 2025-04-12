@@ -72,7 +72,7 @@ style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100
 </div>
     <div id="Banner">
     <script>
-        fetch('banner.html')
+        fetch('banner.php')
           .then(response => response.text())
           .then(data => {
             document.getElementById('Banner').innerHTML = data;
@@ -131,7 +131,7 @@ style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100
     </section>
     <div id="Footer"></div>
     <script>
-        fetch('footer.html')
+        fetch('footer.php')
           .then(response => response.text())
           .then(data => {
             document.getElementById('Footer').innerHTML = data;

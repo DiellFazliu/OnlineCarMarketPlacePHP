@@ -94,11 +94,11 @@
         <div class="footer-section links">
             <h2>Quick Links</h2>
             <ul>
-                <li><a href="/project.html">Home</a></li>
-                <li><a href="/cars.html">Our Cars</a></li>
-                <li><a href="/about-us.html">About Us</a></li>
-                <li><a href="/howitworks.html">How It Works</a></li>
-                <li><a href="/reviews.html">Reviews</a></li>
+                <li><a href="project.php">Home</a></li>
+                <li><a href="cars.php">Our Cars</a></li>
+                <li><a href="about-us.php">About Us</a></li>
+                <li><a href="howitworks.php">How It Works</a></li>
+                <li><a href="reviews.php">Reviews</a></li>
             </ul>
         </div>
         <div class="footer-section contact">

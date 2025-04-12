@@ -230,13 +230,13 @@ i{
     <div id="section-1">
         <nav class="navbar">
             <ul>
-                <li><a href="project.html"><img src="logo.png" class="logo"></a></li>
+                <li><a href="project.php"><img src="logo.png" class="logo"></a></li>
                 <li class="name">AUTOSPHERE</li>
-                <li><a href="project.html" class="line">Home</a></li>
-                <li><a href="/cars.html" class="line">Our Cars</a></li>
-                <li><a href="about-us.html" class="line">About Us</a></li>
-                <li><a href="/howitworks.html" class="line">How it works</a></li>
-                <li><a href="/reviews.html" class="line">Reviews</a></li>
+                <li><a href="project.php" class="line">Home</a></li>
+                <li><a href="cars.php" class="line">Our Cars</a></li>
+                <li><a href="about-us.php" class="line">About Us</a></li>
+                <li><a href="howitworks.php" class="line">How it works</a></li>
+                <li><a href="reviews.php" class="line">Reviews</a></li>
                 <li><a href="#" class="favorite trigger-favorites"><i class="fa-regular fa-heart" id="icon-regular"></i>
                         <i class="fa-solid fa-heart" id="icon-solid"></i></a></li>
 
@@ -245,10 +245,10 @@ i{
                         <a href="#" class="dropbtn"><i class="fa-regular fa-user"></i>Login</a>
                         <ul class="dropdown-content">
                             <li class="login-text trigger-favorites"><a href="#"><i class="fa-regular fa-heart"></i>Favorite cars</a></li>
-                            <input id="button" type="submit" value="Login" onclick="window.location.href='login.html';">
+                            <input id="button" type="submit" value="Login" onclick="window.location.href='login.php';">
                             <li>
                                 <div class="sign-up">
-                                    <a>Don't have an account?</a> <a href="register.html" class="sign" style="color: rgb(141, 224, 32);text-decoration: none;
+                                    <a>Don't have an account?</a> <a href="register.php" class="sign" style="color: rgb(141, 224, 32);text-decoration: none;
                             font-weight: 500;"> <br> Sign up</a>
                                 </div>
                             </li>
