@@ -249,13 +249,6 @@
     </section>
 <div id="white" style="height: 8px;background: white;"></div>
 <div id="Footer"></div>
-<script>
-    fetch('footer.php')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('Footer').innerHTML = data;
-      });
-  </script>
 
     <div id="white" style="height: 8px;background: white;"></div>
 
