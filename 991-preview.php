@@ -404,7 +404,7 @@
 <body>
     <div id="header" style="position: absolute; top: auto; left: auto;width: 100%; padding: 10px 0;"></div>
     <script>
-        fetch('./../banner.html')
+        fetch('banner.php')
             .then(response => {
                 if (!response.ok) throw new Error("Failed to fetch banner.html");
                 return response.text();
@@ -630,7 +630,7 @@
     </div>
 
     <footer>
-        &copy; 2025 Audi. Të gjitha të drejtat e rezervuara.
+        &copy; 2025 Autosphere. Të gjitha të drejtat e rezervuara.
     </footer>
 </body>
 
