@@ -443,9 +443,9 @@
         "Porsche/911/991/p8.jpg", 
         "Porsche/911/991/p9.jpg", 
         "Porsche/911/991/p10.jpg", 
-        "../Porsche/911/991/p11.jpg", 
-        "../Porsche/911/991/p12.jpg", 
-        "../Porsche/911/991/p13.jpg"]);
+        "Porsche/911/991/p11.jpg", 
+        "Porsche/911/991/p12.jpg", 
+        "Porsche/911/991/p13.jpg"]);
 
     $services = [
         new Service("CarAudit™", 67),
