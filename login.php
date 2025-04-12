@@ -241,8 +241,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="fb"><i class="fab fa-facebook"></i></div>
             <div class="gh"><i class="fab fa-github"></i></div>
         </div>
-        <div class="sign-up">Don't have an account?<br>
-             <a href="register.php"> <br> Sign up</a>
+
+        <div class="sign-up" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">
+        Don't have an account? <br />
+        <a href="register.php"> <br> Sign up</a>
         </div>
 
     </form>

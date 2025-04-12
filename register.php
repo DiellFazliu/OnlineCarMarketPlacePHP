@@ -178,13 +178,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
+        .social {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
         .social div {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.27);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #eaf0fb;
             cursor: pointer;
-            transition: transform 0.2s;
         }
 
         .social div:hover {
-            transform: scale(1.1);
+            background-color: rgba(255, 255, 255, 0.47);
         }
 
         @media (max-width: 480px) {
