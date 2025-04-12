@@ -404,7 +404,7 @@
 <body>
     <div id="header" style="position: absolute; top: auto; left: auto;width: 100%; padding: 10px 0;"></div>
     <script>
-        fetch('./../banner.html') // Kontrolloni rrugën
+        fetch('./../banner.html')
             .then(response => {
                 if (!response.ok) throw new Error("Failed to fetch banner.html");
                 return response.text();
@@ -429,28 +429,60 @@
             window.history.back();
         });
     </script>
+    <?php
+    include 'previewOOP.php';
+    $porsche991 = new car("Porsche", "911 991 Turbo", 2020, "3.8L V6", 540, "Automatik", "Benzinë", 15500, "12/2020", 120000);
+    $porsche991->setImages([
+        "Porsche/911/991/p.jpg",
+        "Porsche/911/991/p2.jpg", 
+        "Porsche/911/991/p3.jpg", 
+        "Porsche/911/991/p4.jpg", 
+        "Porsche/911/991/p5.jpg", 
+        "Porsche/911/991/p6.jpg", 
+        "Porsche/911/991/p7.jpg", 
+        "Porsche/911/991/p8.jpg", 
+        "Porsche/911/991/p9.jpg", 
+        "Porsche/911/991/p10.jpg", 
+        "../Porsche/911/991/p11.jpg", 
+        "../Porsche/911/991/p12.jpg", 
+        "../Porsche/911/991/p13.jpg"]);
 
-    <p id="titulli">Porsche 911 991 Turbo 2020</p>
+    $services = [
+        new Service("CarAudit™", 67),
+        new Service("Pika e dorëzimit Prishtina, Kosovo", 1000),
+        new Service("Regjistrimi i veturës", 185, false, true),
+        new Service("10 litra karburant falas", 0, true),
+        new Service("Dogana", 36518, false, true),
+        new Service("Garancion", 0, true)
+    ];
+
+    $totalPrice = $porsche991->getBasePrice();
+    foreach ($services as $service) {
+        $totalPrice += $service->getPrice();
+    }
+    ?>
+
+    <p id="titulli"><?php echo $porsche991->getTitle(); ?></p>
     <div class="logos">
         <div>
-            <img class="logot" src="../car-logos/engine.png">
-            <p>3.8 (540Hp)</p>
+            <img class="logot" src="car-logos/engine.png">
+            <p><?php echo $porsche911->getEngineInfo(); ?></p>
         </div>
         <div>
-            <img class="logot" src="../car-logos/transmission.png">
-            <p>Automatic</p>
+            <img class="logot" src="car-logos/transmission.png">
+            <p><?php echo $porsche911->getTransmission(); ?></p>
         </div>
         <div>
-            <img class="logot" src="../car-logos/fuel.png">
-            <p>Benzinë</p>
+            <img class="logot" src="car-logos/fuel.png">
+            <p><?php echo $porsche911->getFuelType(); ?></p>
         </div>
         <div>
-            <img class="logot" src="../car-logos/road.png">
-            <p>15500km</p>
+            <img class="logot" src="car-logos/road.png">
+            <p><?php echo $porsche911->getMilage(); ?>km</p>
         </div>
         <div>
-            <img class="logot" src="../car-logos/calendar.png">
-            <p>12/2020</p>
+            <img class="logot" src="car-logos/calendar.png">
+            <p><?php echo $porsche911->getProductionDate(); ?></p>
         </div>
     </div>
 
@@ -458,24 +490,14 @@
         <div class="left-content">
             <div class="left-content-up">
                 <div class="slideshow">
-                    <img src="../Porsche/911/991/p.jpg" alt="Slide 1" class="active" onclick="openSlide(1)">
-                    <img src="../Porsche/911/991/p2.jpg " alt="Slide 2" onclick="openSlide(2)">
-                    <img src="../Porsche/911/991/p3.jpg " alt="Slide 3" onclick="openSlide(3)">
-                    <img src="../Porsche/911/991/p4.jpg " alt="Slide 4" onclick="openSlide(4)">
-                    <img src="../Porsche/911/991/p5.jpg " alt="Slide 5" onclick="openSlide(5)">
-                    <img src="../Porsche/911/991/p6.jpg " alt="Slide 6" onclick="openSlide(6)">
-                    <img src="../Porsche/911/991/p7.jpg " alt="Slide 7" onclick="openSlide(7)">
-                    <img src="../Porsche/911/991/p8.jpg " alt="Slide 8" onclick="openSlide(8)">
-                    <img src="../Porsche/911/991/p9.jpg " alt="Slide 9" onclick="openSlide(9)">
-                    <img src="../Porsche/911/991/p10.jpg " alt="Slide 10" onclick="openSlide(10)">
-                    <img src="../Porsche/911/991/p11.jpg " alt="Slide 11" onclick="openSlide(11)">
-                    <img src="../Porsche/911/991/p12.jpg " alt="Slide 12" onclick="openSlide(12)">
-                    <img src="../Porsche/911/991/p13.jpg " alt="Slide 13" onclick="openSlide(13)">
+                    <?php foreach ($porsche991->getImages() as $index => $image) : ?>
+                        <img src="<?php echo $image; ?>" alt="Slide <?php echo $index + 1; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>">
+                    <?php endforeach; ?>
                 </div>
                 
                 <script>
                     function openSlide(slideNumber) {
-                        const baseUrl = "911-slideshow.html";
+                        const baseUrl = "911-slideshow.php";
                         const fullUrl = `${baseUrl}?slide=${slideNumber}`;
                         window.location.href = fullUrl;
                     }
@@ -516,12 +538,9 @@
             <div class="left-content-down">
                 <div class="right">
                     <ul>
-                        <li><strong>Motor:</strong> <span>3.8 V6</span></li>
-                        <li><strong>Fuqia:</strong> <span>540 Hp</span></li>
-                        <li><strong>Transmisioni:</strong> <span>Automatik</span></li>
-                        <li><strong>Karburanti:</strong> <span>Benzinë</span></li>
-                        <li><strong>Viti:</strong> <span>2020</span></li>
-                        <li><strong>Kilometrazhi:</strong> <span>15500 km</span></li>
+                        <?php foreach ($porsche991->getFeatures() as $feature => $value) : ?>
+                        <li><strong><?php echo $feature; ?>:</strong> <span><?php echo $value; ?><span></libxml_clear_errors>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -568,7 +587,7 @@
 
 <script>
   function redirect() {
-    window.location.href = "payment.html";
+    window.location.href = "payment.php";
   }
 </script>
                     <div class="financing">Financim 1800 €/muaj</div>
