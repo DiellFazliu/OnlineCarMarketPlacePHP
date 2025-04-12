@@ -15,56 +15,60 @@ $users = [
     ]
 ];
 
-class UserRegistration {
+class UserRegistration
+{
     private $username;
     private $email;
     private $password;
     private $confirmPassword;
-    
-    public function __construct($username, $email, $password, $confirmPassword) {
+
+    public function __construct($username, $email, $password, $confirmPassword)
+    {
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
         $this->confirmPassword = $confirmPassword;
     }
-    
-    public function validateInput() {
+
+    public function validateInput()
+    {
         global $username_pattern, $email_pattern, $password_pattern;
-        
+
         $errors = [];
-        
+
         if (empty($this->username)) {
             $errors['username'] = "Username cannot be empty";
         } elseif (!preg_match($username_pattern, $this->username)) {
             $errors['username'] = "Username can only contain letters and numbers";
         }
-        
+
         if (empty($this->email)) {
             $errors['email'] = "Email cannot be empty";
         } elseif (!preg_match($email_pattern, $this->email)) {
             $errors['email'] = "Invalid email format";
         }
-        
+
         if (empty($this->password)) {
             $errors['password'] = "Password cannot be empty";
         } elseif (!preg_match($password_pattern, $this->password)) {
             $errors['password'] = "Password must be 8-16 characters long";
         }
-        
+
         if (empty($this->confirmPassword)) {
             $errors['confirmPassword'] = "Please confirm your password";
         } elseif ($this->password !== $this->confirmPassword) {
             $errors['confirmPassword'] = "Passwords do not match";
         }
-        
+
         return $errors;
     }
-    
-    public function register(&$users) {
+
+    public function register(&$users)
+    {
         if (array_key_exists($this->username, $users)) {
             return false;
         }
-        
+
         $users[$this->username] = [
             'email' => $this->email,
             'password' => password_hash($this->password, PASSWORD_DEFAULT)
@@ -79,10 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     $confirmPassword = $_POST['confirmPassword'] ?? '';
-    
+
     $registration = new UserRegistration($username, $email, $password, $confirmPassword);
     $errors = $registration->validateInput();
-    
+
     if (empty($errors)) {
         if ($registration->register($users)) {
             $_SESSION['user'] = $username;
@@ -143,22 +147,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .logo-wrapper {
             display: flex;
-            align-items: center; 
+            align-items: center;
             justify-content: flex-start;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            gap: 10px; 
+            gap: 10px;
             padding: 10px 20px;
             z-index: 1000;
         }
-        
+
         .name {
             font-family: 'Orbitron', sans-serif;
             font-size: 28px;
-            font-weight: 700; 
-            letter-spacing: 2px; 
+            font-weight: 700;
+            letter-spacing: 2px;
             color: rgb(255, 255, 255);
         }
 
@@ -170,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 40px;
             border-radius: 10px;
             border: none;
-            margin: auto;   
+            margin: auto;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
@@ -210,10 +214,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 transform: translateX(-15px);
             }
 
+            .social {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .social div {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                background-color: rgba(255, 255, 255, 0.27);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #eaf0fb;
+                cursor: pointer;
+            }
+
+            .social div:hover {
+                background-color: rgba(255, 255, 255, 0.47);
+            }
+
             .name {
                 display: none;
             }
-            
+
             .text-section {
                 display: none;
             }
@@ -230,33 +257,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    
+
     <form method="POST">
         <h3 class="register-title" style="text-align: center;text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">Sign Up</h3>
         <div class="sing-up-subtitle" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">Just some details to get you in!</div>
 
-        <input type="text" placeholder="Username" id="username" name="username" 
-               value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
-               class="<?php echo isset($errors['username']) ? 'input-error' : ''; ?>">
+        <input type="text" placeholder="Username" id="username" name="username"
+            value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
+            class="<?php echo isset($errors['username']) ? 'input-error' : ''; ?>">
         <?php if (isset($errors['username'])): ?>
             <div class="error-message"><?php echo $errors['username']; ?></div>
         <?php endif; ?>
 
         <input type="email" placeholder="Email" id="email" name="email"
-               value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
-               class="<?php echo isset($errors['email']) ? 'input-error' : ''; ?>">
+            value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
+            class="<?php echo isset($errors['email']) ? 'input-error' : ''; ?>">
         <?php if (isset($errors['email'])): ?>
             <div class="error-message"><?php echo $errors['email']; ?></div>
         <?php endif; ?>
 
         <input type="password" placeholder="Password" id="password" name="password"
-               class="<?php echo isset($errors['password']) ? 'input-error' : ''; ?>">
+            class="<?php echo isset($errors['password']) ? 'input-error' : ''; ?>">
         <?php if (isset($errors['password'])): ?>
             <div class="error-message"><?php echo $errors['password']; ?></div>
         <?php endif; ?>
 
         <input type="password" placeholder="Confirm Password" id="confirmPassword" name="confirmPassword"
-               class="<?php echo isset($errors['confirmPassword']) ? 'input-error' : ''; ?>">
+            class="<?php echo isset($errors['confirmPassword']) ? 'input-error' : ''; ?>">
         <?php if (isset($errors['confirmPassword'])): ?>
             <div class="error-message"><?php echo $errors['confirmPassword']; ?></div>
         <?php endif; ?>
@@ -264,12 +291,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button id="button" type="submit">Sign Up</button>
 
         <div>
-            <span class="or">Already Registered</span>
-            <div class="sign-up" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">
-         <a href="login.php">Login</a>
+            <span class="or">Or</span>
         </div>
+        <div class="social">
+            <div class="go"><i class="fab fa-google"></i></div>
+            <div class="fb"><i class="fab fa-facebook"></i></div>
+            <div class="gh"><i class="fab fa-github"></i></div>
         </div>
-    
+        <div class="sign-up" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">
+            Alreadr Registered? <br />
+            <a href="login.php">Login</a>
+        </div>
+
     </form>
 
     <div class="text-section" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
@@ -277,4 +310,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Sign up to enjoy all our services</p>
     </div>
 </body>
+
 </html>

@@ -145,6 +145,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px 20px;
             z-index: 1000;
         }
+        .social {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        }
+
+        .social div {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.27);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #eaf0fb;
+        cursor: pointer;
+        }
+
+        .social div:hover {
+        background-color: rgba(255, 255, 255, 0.47);
+        }
         
         .name {
             font-family: 'Orbitron', sans-serif;
@@ -212,10 +234,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="#" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">Forgot password?</a>
         </div>
         <div style="padding-top:10px;text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">
-            <span class="or" >Don't have an account?</span>
-            <div class="sign-up">
-             <a href="register.php"> <br> Sign up</a>
+            <span class="or" >Or</span>
         </div>
+        <div class="social">
+            <div class="go"><i class="fab fa-google"></i></div>
+            <div class="fb"><i class="fab fa-facebook"></i></div>
+            <div class="gh"><i class="fab fa-github"></i></div>
+        </div>
+        <div class="sign-up">Don't have an account?<br>
+             <a href="register.php"> <br> Sign up</a>
         </div>
 
     </form>
