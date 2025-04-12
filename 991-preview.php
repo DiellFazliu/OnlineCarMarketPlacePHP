@@ -466,23 +466,23 @@
     <div class="logos">
         <div>
             <img class="logot" src="car-logos/engine.png">
-            <p><?php echo $porsche911->getEngineInfo(); ?></p>
+            <p><?php echo $porsche991->getEngineInfo(); ?></p>
         </div>
         <div>
             <img class="logot" src="car-logos/transmission.png">
-            <p><?php echo $porsche911->getTransmission(); ?></p>
+            <p><?php echo $porsche991->getTransmission(); ?></p>
         </div>
         <div>
             <img class="logot" src="car-logos/fuel.png">
-            <p><?php echo $porsche911->getFuelType(); ?></p>
+            <p><?php echo $porsche991->getFuelType(); ?></p>
         </div>
         <div>
             <img class="logot" src="car-logos/road.png">
-            <p><?php echo $porsche911->getMilage(); ?>km</p>
+            <p><?php echo $porsche991->getMileage(); ?>km</p>
         </div>
         <div>
             <img class="logot" src="car-logos/calendar.png">
-            <p><?php echo $porsche911->getProductionDate(); ?></p>
+            <p><?php echo $porsche991->getProductionDate(); ?></p>
         </div>
     </div>
 
