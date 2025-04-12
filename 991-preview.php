@@ -546,20 +546,20 @@
             </div>
             <div class="guarantee-section">
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>Kthim të parave</h3>
                     <p>Nëse nuk ju pëlqen vetura, kthejeni brenda 14 ditëve.</p>
                 </div>
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>Blerje e sigurt</h3>
                     <p>Ne garantojmë gjendjen teknike të çdo veture.</p>
                 </div>
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>6 muaj garancion</h3>
                     <p>Ofrojmë çdo veturë me garancion.</p>
-                    <a href="#">Më shumë rreth garancive &rarr;</a>
+                    <a href="howitworks.php">Më shumë rreth garancive &rarr;</a>
                 </div>
             </div>
         </div>
@@ -590,39 +590,24 @@
     window.location.href = "payment.php";
   }
 </script>
-                    <div class="financing">Financim 1800 €/muaj</div>
+                    <div class="financing"><?php echo $porsche991->formatPrice(1800);?>/muaj</div>
                 </div>
 
                 <div class="services">
                     <h3>Totali i shërbimeve</h3>
-                    <div class="service-item">
-                        <span>CarAudit™</span>
-                        <span>67 €</span>
-                    </div>
-                    <div class="service-item">
-                        <span>Pika e dorëzimit Prishtina, Kosovo</span>
-                        <span>1000 €</span>
-                    </div>
-                    <div class="service-item">
-                        <span>Regjistrimi i veturës <span class="info">(i)</span></span>
-                        <span>185 €</span>
-                    </div>
-                    <div class="service-item">
-                        <span>10 litra karburant falas</span>
-                        <span class="free">Falas</span>
-                    </div>
-                    <div class="service-item">
-                        <span>Dogana <span class="info">(i)</span></span>
-                        <span>36 518 €</span>
-                    </div>
-                    <div class="service-item">
-                        <span>Garancion</span>
-                        <span class="free">Falas</span>
-                    </div>
-
+                    <?php foreach ($services as $service) : ?>
+                        <div class="service-item">
+                            <span><?php echo $service->getName(); ?>
+                            <?php if ($service->hasInfo()): ?> 
+                                <span class="info">(i)</span>';
+                                <?php endif; ?>
+                            </span>
+                            <span><?php echo $service->isFree() ? 'Falas' : $porsche991->formatPrice($service->getPrice()); ?></span>
+                        </div>
+                    <?php endforeach; ?>
                     <div class="total">
-                        <span>Totali për pagesë</span>
-                        <span>157 770 €</span>
+                        <span>Totali i shërbimeve</span>
+                        <span><?php echo $porsche991->formatPrice($totalPrice); ?></span>
                     </div>
                 </div>
             </div>
