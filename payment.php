@@ -12,7 +12,7 @@
     <style>
         #payments {
     font-family: 'Arial', sans-serif;
-    background-image: url(payment.webp);
+    background-image: url(bmw-3-0-csl-mi-05.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -138,27 +138,28 @@
 <script src="favorite1.js"></script>
 </div>
         <section id="payments" style="padding: 80px 20px; border-top: 4px solid #34495e;">
-            <div class="payment-container">
+            <div class="payment-container" style="background-color: rgba(255, 255, 255, 0.5);backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(10px);box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);">
                 <h2 class="payment-title">Mënyra e Pagesës <img src="visa&mastercard.png" style="max-width: 150px;padding-left: 30px;"></h2>
                 <form id="payment-form" class="payment-form">
                     <div class="form-group">
                         <label for="card-number">Numri i Kartës së Kreditit:</label>
-                        <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
+                        <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required style="background-color: rgba(255, 255, 255, 0.5);">
                     </div>
         
                     <div class="form-group">
                         <label for="expiry-date">Data e Skadimit (MM/YY):</label>
-                        <input type="text" id="expiry-date" placeholder="MM/YY" maxlength="5" required>
+                        <input type="text" id="expiry-date" placeholder="MM/YY" maxlength="5" required style="background-color: rgba(255, 255, 255, 0.5);">
                     </div>
         
                     <div class="form-group">
                         <label for="cvv">CVV:</label>
-                        <input type="text" id="cvv" placeholder="123" maxlength="3" required>
+                        <input type="text" id="cvv" placeholder="123" maxlength="3" required style="background-color: rgba(255, 255, 255, 0.5);">
                     </div>
         
                     <div class="form-group">
                         <label for="cardholder-name">Emri i Mbajtësit të Kartës:</label>
-                        <input type="text" id="cardholder-name" placeholder="Emri dhe Mbiemri" required>
+                        <input type="text" id="cardholder-name" placeholder="Emri dhe Mbiemri" required style="background-color: rgba(255, 255, 255, 0.5);">
                     </div>
         
                     <button type="submit" class="payment-button">Paguaj Tani</button>

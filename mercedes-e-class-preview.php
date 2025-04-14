@@ -564,7 +564,7 @@
 
 <script>
   function redirect() {
-    window.location.href = "payment.html";
+    window.location.href = "payment.php";
   }
 </script>
                     <div class="financing">Financim 1100 €/muaj</div>
