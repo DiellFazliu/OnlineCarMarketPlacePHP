@@ -9,6 +9,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <title>AUTOSPHERE</title>
+    <style>
+        #favorites-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,7 +38,7 @@
             'model' => 'E Class',
             'price' => 65000,
             'year' => 2022,
-            'image' => 'mercedes-e-class.jfif',
+            'image' => 'Mercedes-Benz/E-class/normal/e1.jfif',
             'discount' => 10
         ],
         [
@@ -40,7 +46,7 @@
             'model' => 'Series 7',
             'price' => 72000,
             'year' => 2023,
-            'image' => 'bmw-7-series.jfif',
+            'image' => 'BMW/M7/2024/b.jpg',
             'discount' => 8
         ],
         [
@@ -48,7 +54,7 @@
             'model' => 'A6',
             'price' => 58000,
             'year' => 2021,
-            'image' => 'audi-a6.jfif',
+            'image' => 'Audi/A6/normal/a2.jfif',
             'discount' => 12
         ],
         [
@@ -56,7 +62,39 @@
             'model' => '911',
             'price' => 115000,
             'year' => 2023,
-            'image' => 'porsche-911.jfif',
+            'image' => 'Porsche/911/991/p.jpg',
+            'discount' => 5
+        ],
+        [
+            'brand' => 'Mercedes',
+            'model' => 'C Class',
+            'price' => 35000,
+            'year' => 2019,
+            'image' => 'Mercedes-Benz/C-class/coupe/c2.jfif',
+            'discount' => 5
+        ],
+        [
+            'brand' => 'BMW',
+            'model' => 'M3',
+            'price' => 75000,
+            'year' => 2023,
+            'image' => 'BMW/M3/m3/b2.jpg',
+            'discount' => 5
+        ],
+        [
+            'brand' => 'Audi',
+            'model' => 'RS7',
+            'price' => 65000,
+            'year' => 2020,
+            'image' => 'Audi/A7/rs7/a9.jfif',
+            'discount' => 5
+        ],
+        [
+            'brand' => 'Rolls Royce',
+            'model' => 'Phantom',
+            'price' => 295000,
+            'year' => 2021,
+            'image' => 'Rolls Royce/phantom/r.jpg',
             'discount' => 5
         ]
     ];
@@ -81,12 +119,14 @@
         private $brand;
         private $model;
         private $price;
+        private $image;
 
-        public function __construct($brand, $model, $price)
+        public function __construct($brand, $model, $price, $image)
         {
             $this->brand = $brand;
             $this->model = $model;
             $this->price = $price;
+            $this->image = $image;
         }
 
         public function getBrand()
@@ -104,6 +144,11 @@
             return $this->price;
         }
 
+        public function getImage()
+        {
+            return $this->image;
+        }
+
         public function setPrice($newPrice)
         {
             if ($newPrice > 0) {
@@ -119,10 +164,12 @@
         }
     }
 
+
     $car_objects = [];
     foreach ($car_deals as $deal) {
-        $car_objects[] = new Car($deal['brand'], $deal['model'], $deal['price']);
+        $car_objects[] = new Car($deal['brand'], $deal['model'], $deal['price'], $deal['image']);
     }
+
 
     usort($car_objects, function ($a, $b) {
         return $a->getPrice() <=> $b->getPrice();
@@ -226,20 +273,27 @@
     <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
     <div id="available-cars" style="padding: 20px; margin-top: 20px; background: white;">
-        <h3 style="text-align: center; font-size: 2.8rem">Deals of the Week</h3>
-        <div id="cars-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-            <?php foreach ($car_objects as $car): ?>
-                <div class="car-card" style="width: 300px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <img src="<?php echo strtolower($car->getBrand()) . '-' . strtolower(str_replace(' ', '-', $car->getModel())) . '.jfif'; ?>" alt="<?php echo $car->getBrand() . ' ' . $car->getModel(); ?>" style="width: 100%; height: 200px; object-fit: cover;">
-                    <div style="padding: 15px;">
-                        <h4 style="margin: 0 0 10px 0; font-size: 1.2rem;"><?php echo $car->getBrand() . ' ' . $car->getModel(); ?></h4>
-                        <p style="margin: 5px 0; color: #555;">Price: <?php echo $car->getFormattedPrice(); ?></p>
-                        <button class="add-to-favorites" data-brand="<?php echo $car->getBrand(); ?>" data-model="<?php echo $car->getModel(); ?>" data-price="<?php echo $car->getPrice(); ?>" style="background: <?php echo PRIMARY_COLOR; ?>; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; margin-top: 10px;">Add to Favorites</button>
-                    </div>
+    <h3 style="text-align: center; font-size: 2.8rem">Deals of the Week</h3>
+    <div id="cars-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        <?php foreach ($car_objects as $car): ?>
+            <?php
+                $previewPage = strtolower(str_replace(' ', '-', $car->getBrand() . '-' . $car->getModel())) . '-preview.php';
+            ?>
+            <div class="car-card" style="width: 300px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <a href="<?php echo $previewPage; ?>">
+                    <img src="<?php echo $car->getImage(); ?>" alt="<?php echo $car->getBrand() . ' ' . $car->getModel(); ?>" style="width: 100%; height: 200px; object-fit: cover;">
+                </a>
+
+                <div style="padding: 15px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 1.2rem;"><?php echo $car->getBrand() . ' ' . $car->getModel(); ?></h4>
+                    <p style="margin: 5px 0; color: #555;">Price: <?php echo $car->getFormattedPrice(); ?></p>
+                    <button class="add-to-favorites" data-brand="<?php echo $car->getBrand(); ?>" data-model="<?php echo $car->getModel(); ?>" data-price="<?php echo $car->getPrice(); ?>" data-image="<?php echo $car->getImage(); ?>" style="background: <?php echo PRIMARY_COLOR; ?>; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; margin-top: 10px;">Add to Favorites</button>
                 </div>
-            <?php endforeach; ?>
-        </div>
+            </div>
+        <?php endforeach; ?>
     </div>
+</div>
+
 
     <section id="car-security" style="background-image: url(bmwm4.jpg);position: relative;background-size: cover;background-position: center ; padding: 30px 20px;">
         <div class="container">
@@ -247,8 +301,7 @@
             <h3 style="text-align: center;padding-top: 0; margin-bottom: 40px; font-size: 2.8rem;margin-top: 480px; color: white; font-weight: 600;">We Deliver Your Car, Directly to Your Home</h3>
         </div>
     </section>
-<div id="white" style="height: 8px;background: white;"></div>
-<div id="Footer"></div>
+    <div id="white" style="height: 8px;background: white;"></div>
 
     <div id="white" style="height: 8px;background: white;"></div>
 
@@ -278,7 +331,7 @@
             const combinations = {
                 "mercedes": "Mercedes.php",
                 "mercedes-c-class": "mercedesC.php",
-                "mercedes-e-class": "mercedesE.html",
+                "mercedes-e-class": "mercedesE.php",
                 "mercedes-s-class": "mercedesS.php",
                 "mercedes-g-class": "mercedesG.php",
                 "bmw": "BMW.php",
@@ -363,12 +416,13 @@
             function updateFavoritesDisplay() {
                 favoritesContainer.innerHTML = favorites.length > 0 ?
                     favorites.map(car => `
-                        <div class="favorite-car" style="width: 200px; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-                            <h4>${car.brand} ${car.model}</h4>
-                            <p>Price: $${car.price.toLocaleString()}</p>
-                            <button class="remove-favorite" data-brand="${car.brand}" data-model="${car.model}" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Remove</button>
-                        </div>
-                    `).join("") :
+            <div class="favorite-car" style="width: 200px; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                <img src="${car.image}" alt="${car.brand} ${car.model}" style="width: 100%; height: 120px; object-fit: cover;">
+                <h4>${car.brand} ${car.model}</h4>
+                <p>Price: $${car.price.toLocaleString()}</p>
+                <button class="remove-favorite" data-brand="${car.brand}" data-model="${car.model}" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Remove</button>
+            </div>
+        `).join("") :
                     "<p>No favorite cars yet.</p>";
 
                 document.querySelectorAll(".remove-favorite").forEach(button => {
@@ -405,6 +459,7 @@
                     const brand = this.dataset.brand;
                     const model = this.dataset.model;
                     const price = parseFloat(this.dataset.price);
+                    const image = this.dataset.image;
 
                     const exists = favorites.some(car => car.brand === brand && car.model === model);
 
@@ -412,7 +467,8 @@
                         favorites.push({
                             brand,
                             model,
-                            price
+                            price,
+                            image
                         });
                         localStorage.setItem("favorites", JSON.stringify(favorites));
                         alert(`${brand} ${model} added to favorites!`);
