@@ -1,3 +1,99 @@
+<?php
+
+$name = "Autosphere";
+define("YEAR_ESTABLISHED", 2000);
+$vehicles = ["Toyota", "BMW", "Honda"];
+
+$welcome = "Welcome to " . strtoupper($name);
+
+
+function getMission($company) {
+    return "$company is committed to customer satisfaction.";
+}
+
+$rating = 4.8;
+if ($rating >= 4.5) {
+    $review = "Excellent service!";
+} else {
+    $review = "Needs improvement.";
+}
+
+
+$carDetails = [
+    "brand" => "BMW",
+    "year" => 2019,
+    "features" => ["Bluetooth", "GPS", "Sunroof"]
+];
+
+
+$brands = ["Toyota", "BMW", "Audi"];
+sort($brands); 
+
+
+$server = $_SERVER['HTTP_HOST'];
+
+
+
+class Company {
+    private $name;
+    protected $founded;
+    public $location;
+
+    public function __construct($name, $founded, $location) {
+        $this->name = $name;
+        $this->founded = $founded;
+        $this->location = $location;
+    }
+
+    public function getInfo() {
+        return "Company: $this->name, Founded: $this->founded, Location: $this->location";
+    }
+
+    public function __destruct() {
+       
+    }
+}
+
+class Dealership extends Company {
+    public $carsAvailable;
+
+    public function __construct($name, $founded, $location, $cars) {
+        parent::__construct($name, $founded, $location);
+        $this->carsAvailable = $cars;
+    }
+
+    public function listCars() {
+        return implode(", ", $this->carsAvailable);
+    }
+}
+
+$dealer = new Dealership("Autosphere", YEAR_ESTABLISHED, "Prishtina", ["Toyota", "Audi", "BMW"]);
+$companyInfo = $dealer->getInfo();
+
+// ===== REGEX =====
+
+
+$email = "user@example.com";
+if (preg_match("/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$/", $email)) {
+    $emailValid = "Valid Email";
+} else {
+    $emailValid = "Invalid Email";
+}
+
+
+$date = "2025-04-16";
+$isValidDate = preg_match("/^\d{4}-\d{2}-\d{2}$/", $date) ? "Valid Date" : "Invalid Date";
+
+
+$price = "12-345";
+$isNumericFormat = preg_match("/^\d{2}-\d{3}$/", $price) ? "Valid Format" : "Invalid Format";
+
+
+$rawText = "Welcome!!! to *** Autosphere";
+$cleanText = preg_replace("/[^A-Za-z0-9\s]/", "", $rawText);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,12 +171,13 @@ style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100
                 <div class="about-text">
                     <h2>Our History</h2>
                     <p>
-                        Since 2000, Autosphere has been dedicated to transforming the car-buying experience. 
+                        <?= $welcome ?><br><br>
+                        Since <?= YEAR_ESTABLISHED ?>, <?= $name ?> has been dedicated to transforming the car-buying experience. 
                         Founded by Filan Fisteku, our mission was clear: to redefine customer-centric service 
                         in the automotive industry.
                         <br><br>
                         Starting small, we quickly gained recognition for our curated selection of quality pre-owned vehicles. 
-                        Today, Autosphere stands as a trusted name, built on integrity and personalized service.
+                        Today, <?= $name ?> stands as a trusted name, built on integrity and personalized service.
                     </p>
                 </div>
             </div>
@@ -89,11 +186,13 @@ style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100
                 <div class="about-text">
                     <h2>Our Mission</h2>
                     <p>
-                        At Autosphere, our mission is to redefine the car-buying experience through transparency, 
+                        <?= getMission($name) ?><br><br>
+                        At <?= $name ?>, our mission is to redefine the car-buying experience through transparency, 
                         quality, and exceptional service. We prioritize trust and integrity, offering a diverse 
                         selection of reliable pre-owned vehicles.
                         <br><br>
-                        Your trust drives our commitment to innovation, building lasting relationships, and exceeding expectations.
+                        <?= $emailValid ?> | <?= $isValidDate ?> | <?= $isNumericFormat ?><br>
+                        Cleaned Text: <?= $cleanText ?>
                     </p>
                 </div>
                 <div class="about-img" style="background-image: url('images/mission.jpg');"></div>
