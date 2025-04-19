@@ -58,9 +58,7 @@
 
     .listings-custom {
         margin-left: 35%;
-        /* Ensure this takes up the remaining space */
         width: 65%;
-        /* Adjust width to 65% */
         min-width: 500px;
     }
 
@@ -287,43 +285,31 @@
 
     .close-btn-test {
         background-color: white;
-        /* Keep the white background */
         color: black;
-        /* Text color */
         border: none;
         border-radius: 50%;
-        /* Circular button */
         width: 40px;
-        /* New width */
         height: 40px;
-        /* New height */
         display: flex;
         justify-content: center;
         align-items: center;
         position: absolute;
         top: 20px;
-        /* Adjust distance from the top */
         right: 20px;
-        /* Adjust distance from the right */
         cursor: pointer;
         font-size: 18px;
-        /* Larger font size */
         font-weight: bold;
 
     }
 
     .close-btn-test:hover {
         background-color: grey;
-        /* Optional hover effect */
     }
 
     .card-link {
         text-decoration: none;
-        /* Remove underline */
         color: inherit;
-        /* Inherit text color */
         display: block;
-        /* Ensure the link wraps the entire card */
     }
 
 
@@ -346,14 +332,12 @@
             display: block;
         }
 
-        /* Move the guarantee section to the bottom of the page on smaller devices */
         .guarantee-section {
             position: relative;
             margin-top: 20px;
             margin-right: 0;
         }
 
-        /* For smaller screens, show the filters as a popup */
         .filters-custom {
             position: absolute;
             width: 100%;
@@ -389,7 +373,6 @@
             position: static;
         }
 
-        /* Remove the guarantee section fixed positioning */
         .guarantee-section {
             position: relative;
             margin-top: 20px;
@@ -415,21 +398,16 @@
         .card-custom {
             display: block;
             text-align: center;
-            /* Optional: Center-align content */
         }
 
         .card-custom img {
             margin: 0 auto;
-            /* Center the image */
             width: 100%;
-            /* Make the image take the full width */
             height: auto;
-            /* Maintain aspect ratio */
         }
 
         .card-custom .details-custom {
             text-align: left;
-            /* Reset text alignment */
             margin-top: 10px;
         }
     }
@@ -456,7 +434,7 @@
 <body>
     <div id="Banner"></div>
     <script>
-        fetch('banner.php')
+        fetch('banner.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('Banner').innerHTML = data;
@@ -504,17 +482,14 @@
                         let selectedBrand = "";
                         let selectedModel = "";
 
-                        // Toggle Filters Popup
                         $(".filter-btn").click(function () {
                             $(".filters-custom").toggleClass("active");
                         });
 
-                        // Close button functionality
                         $(".close-btn-test").click(function () {
                             $(".filters-custom").removeClass("active");
                         });
 
-                        // Define models for each brand
                         const models = {
                             Mercedes: ["C Class", "E Class", "S Class", "G Class"],
                             Audi: ["A3", "A6", "A7", "A8"],
@@ -524,73 +499,69 @@
                         };
 
                         const combinations = {
-                            "mercedes": "Mercedes.html",
-                            "mercedes-c-class": "mercedesC.html",
-                            "mercedes-e-class": "mercedesE.html",
-                            "mercedes-s-class": "mercedesS.html",
-                            "mercedes-g-class": "mercedesG.html",
-                            "bmw": "BMW.html",
-                            "bmw-series-3": "bmwm3.html",
-                            "bmw-series-4": "bmwm4.html",
-                            "bmw-series-7": "bmw7.html",
-                            "bmw-series-8": "bmw8.html",
-                            "audi": "Audi.html",
-                            "audi-a3": "audia3.html",
-                            "audi-a6": "audia6.html",
-                            "audi-a7": "audia7.html",
-                            "audi-a8": "audia8.html",
-                            "porsche": "Porsche.html",
-                            "porsche-911": "porsche911.html",
-                            "porsche-taycan": "porschetaycan.html",
-                            "rollsroyce": "RollsRoyce.html",
-                            "rollsroyce-dawn": "rollsroycedawn.html",
-                            "rollsroyce-ghost": "rollsroyceghost.html",
-                            "rollsroyce-phantom": "rollsroycephantom.html",
-                            "rollsroyce-wraith": "rollsroycewraith.html"
+                            "mercedes": "Mercedes.php",
+                            "mercedes-c-class": "mercedesC.php",
+                            "mercedes-e-class": "mercedesE.php",
+                            "mercedes-s-class": "mercedesS.php",
+                            "mercedes-g-class": "mercedesG.php",
+                            "bmw": "BMW.php",
+                            "bmw-series-3": "bmwm3.php",
+                            "bmw-series-4": "bmwm4.php",
+                            "bmw-series-7": "bmw7.php",
+                            "bmw-series-8": "bmw8.php",
+                            "audi": "Audi.php",
+                            "audi-a3": "audia3.php",
+                            "audi-a6": "audia6.php",
+                            "audi-a7": "audia7.php",
+                            "audi-a8": "audia8.php",
+                            "porsche": "Porsche.php",
+                            "porsche-911": "porsche911.php",
+                            "porsche-taycan": "porschetaycan.php",
+                            "rollsroyce": "RollsRoyce.php",
+                            "rollsroyce-dawn": "rollsroycedawn.php",
+                            "rollsroyce-ghost": "rollsroyceghost.php",
+                            "rollsroyce-phantom": "rollsroycephantom.php",
+                            "rollsroyce-wraith": "rollsroycewraith.php"
                         };
 
-                        // Update selected brand
                         $("#brandMenu-custom a").click(function (e) {
                             e.preventDefault();
                             selectedBrand = $(this).data("brand");
-                            $("#brandButton-custom").text(selectedBrand); // Update button text
-                            $("#brandMenu-custom").slideUp(500); // Close Brand menu
+                            $("#brandButton-custom").text(selectedBrand);
+                            $("#brandMenu-custom").slideUp(500);
 
-                            // Populate Model menu based on selected brand
                             const modelList = models[selectedBrand] || [];
                             const modelItems = modelList.map(model => `<li><a href="#">${model}</a></li>`).join("");
                             $("#modelMenu-custom").html(modelItems);
-                            $("#modelButton-custom").text("Model"); // Reset Model button text
+                            $("#modelButton-custom").text("Model");
 
-                            // Update the extrapart button text with the selected brand
-                            $("#extrapart-custom").val("Search " + selectedBrand); // Update input value dynamically
+                            $("#extrapart-custom").val("Search " + selectedBrand);
                         });
 
-                        // Update selected model
                         $("#modelMenu-custom").on("click", "a", function (e) {
                             e.preventDefault();
                             selectedModel = $(this).text();
-                            $("#modelButton-custom").text(selectedModel); // Update model button text
-                            $("#modelMenu-custom").slideUp(500); // Close model menu
+                            $("#modelButton-custom").text(selectedModel);
+                            $("#modelMenu-custom").slideUp(500);
 
-                            // Update the extrapart button text with the selected model
-                            $("#extrapart-custom").val("Search " + selectedBrand + " " + selectedModel); // Update input value dynamically
+                            
+                            $("#extrapart-custom").val("Search " + selectedBrand + " " + selectedModel); 
                         });
 
-                        // Handle Search button click and redirect
+                        
                         $("#extrapart-custom").click(function () {
                             if (selectedBrand) {
-                                // Create the key for the brand-model combination
+                                
                                 let key = selectedBrand.toLowerCase().replace(/\s+/g, '-');
 
-                                // If model is selected, add model to the key
+                                
                                 if (selectedModel) {
                                     key += '-' + selectedModel.toLowerCase().replace(/\s+/g, '-');
                                 }
 
-                                // Check if the combination exists in the mapping
+                                
                                 if (combinations[key]) {
-                                    window.location.href = combinations[key]; // Redirect to the corresponding page
+                                    window.location.href = combinations[key];
                                 } else {
                                     alert("No page found for this combination. Please select a valid brand and model.");
                                 }
@@ -599,11 +570,11 @@
                             }
                         });
 
-                        // Toggle Brand and Model menus
+                        
                         $(".btnMenu-custom").click(function () {
                             const menuId = $(this).attr("id").replace("Button-custom", "Menu-custom");
-                            $(".Menu-custom").not(`#${menuId}`).slideUp(500); // Close other menus
-                            $(`#${menuId}`).stop(true, true).slideToggle(500); // Toggle the clicked menu
+                            $(".Menu-custom").not(`#${menuId}`).slideUp(500); 
+                            $(`#${menuId}`).stop(true, true).slideToggle(500);
                         });
                     });
 
@@ -651,7 +622,7 @@
             </div>
         </a>
         
-        <a href="A3Coupe-preview.html" class="card-link">
+        <a href="A3Coupe-preview.php" class="card-link">
             <div class="card-custom">
                 <img src="Audi/A3/kabriolet/a.jfif" alt="Audi A3 Coupe">
                 <div class="details-custom">
@@ -670,9 +641,9 @@
             </div>
         </a>
         
-        <a href="A6-preview.html" class="card-link">
+        <a href="A6-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Audi/A6/normal/a.jfif" alt="Audi A6">
+                <img src="Audi/A6/normal/a1.jfif" alt="Audi A6">
                 <div class="details-custom">
                     <h4>Audi A6 3.0 TDI</h4>
                     <p>45,000 km | 05/2020 | 272 hp | Automatic | Diesel</p>
@@ -689,9 +660,9 @@
             </div>
         </a>
         
-        <a href="RS6-preview.html" class="card-link">
+        <a href="RS6-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Audi/A6/rs6/a.jfif" alt="Audi RS6">
+                <img src="Audi/A6/rs6/a.jfif" alt="Audi RS6">
                 <div class="details-custom">
                     <h4>Audi RS6 Avant</h4>
                     <p>22,000 km | 09/2021 | 600 hp | Automatic | Petrol</p>
@@ -708,9 +679,9 @@
             </div>
         </a>
         
-        <a href="A7-preview.html" class="card-link">
+        <a href="A7-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Audi/A7/normal/a.jfif" alt="Audi A7">
+                <img src="Audi/A7/normal/a.jfif" alt="Audi A7">
                 <div class="details-custom">
                     <h4>Audi A7 Sportback</h4>
                     <p>28,000 km | 06/2021 | 340 hp | Automatic | Petrol</p>
@@ -727,9 +698,9 @@
             </div>
         </a>
         
-        <a href="rs7-preview.html" class="card-link">
+        <a href="rs7-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Audi/A7/rs7/a.jfif" alt="Audi RS7">
+                <img src="Audi/A7/rs7/a.jfif" alt="Audi RS7">
                 <div class="details-custom">
                     <h4>Audi RS7 Avant</h4>
                     <p>14,500 km | 03/2021 | 600 hp | Automatic | Petrol</p>
@@ -746,9 +717,9 @@
             </div>
         </a>
         
-        <a href="A8-preview.html" class="card-link">
+        <a href="A8-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Audi/A8/normal/a.jfif" alt="Audi A8">
+                <img src="Audi/A8/normal/a.jfif" alt="Audi A8">
                 <div class="details-custom">
                     <h4>Audi A8 L 55 TFSI</h4>
                     <p>50,000 km | 11/2020 | 333 hp | Automatic | Petrol</p>
@@ -764,9 +735,9 @@
                 </div>
             </div>
         </a>
-        <a href="S8-preview.html" class="card-link">
+        <a href="S8-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Audi/A8/s8/a.jfif" alt="Audi S8">
+                <img src="Audi/A8/s8/a.jfif" alt="Audi S8">
                 <div class="details-custom">
                     <h4>Audi S8 420 kW</h4>
                     <p>13,500 km | 03/2018 | 420 kW (571 hp) | Automatic | Petrol</p>
@@ -783,9 +754,9 @@
                 </div>
             </div>
         </a>        
-        <a href="BMW3-preview.html" class="card-link">
+        <a href="BMW3-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../BMW/M3/normal/b.jpg" alt="BMW M3">
+                <img src="BMW/M3/normal/b.jpg" alt="BMW M3">
                 <div class="details-custom">
                     <h4>BMW M3 G80</h4>
                     <p>10,000 km | 02/2022 | 510 hp | Automatic | Petrol</p>
@@ -801,9 +772,9 @@
                 </div>
             </div>
         </a>
-        <a href="M3-preview.html" class="card-link">
+        <a href="M3-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../BMW/M3/m3/b.jpg" alt="BMW M3">
+                <img src="BMW/M3/m3/b.jpg" alt="BMW M3">
                 <div class="details-custom">
                     <h4>BMW M3 510 hp</h4>
                     <p>20,000 km | 11/2020 | 510 hp | Automatic | Petrol</p>
@@ -820,9 +791,9 @@
                 </div>
             </div>
         </a>        
-        <a href="BMW4-preview.html" class="card-link">
+        <a href="BMW4-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../BMW/M4/coupe/b.jpg" alt="BMW M4 Coupe">
+                <img src="BMW/M4/coupe/b.jpg" alt="BMW M4 Coupe">
                 <div class="details-custom">
                     <h4>BMW M4 G82</h4>
                     <p>15,000 km | 05/2021 | 510 hp | Automatic | Petrol</p>
@@ -838,9 +809,9 @@
                 </div>
             </div>
         </a>
-        <a href="M4-preview.html" class="card-link">
+        <a href="M4-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../BMW/M4/m4/b.jpg" alt="BMW M4">
+                <img src="BMW/M4/m4/b.jpg" alt="BMW M4">
                 <div class="details-custom">
                     <h4>BMW M4 G82 510 hp</h4>
                     <p>15,000 km | 05/2021 | 510 hp | Automatic | Petrol</p>
@@ -856,9 +827,9 @@
                 </div>
             </div>
         </a>        
-        <a href="BMW7-preview.html" class="card-link">
+        <a href="BMW7-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../BMW/M7/2024/b.jpg" alt="BMW 7 Series 2024">
+                <img src="BMW/M7/2024/b.jpg" alt="BMW 7 Series 2024">
                 <div class="details-custom">
                     <h4>BMW 7 Series 2024</h4>
                     <p>500 km | 01/2024 | 380 hp | Automatic | Petrol</p>
@@ -874,9 +845,9 @@
                 </div>
             </div>
         </a>
-        <a href="M7-preview.html" class="card-link">
+        <a href="M7-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../BMW/M7/m sport/b.jpg" alt="BMW 7 M Sport">
+                <img src="BMW/M7/m sport/b.jpg" alt="BMW 7 M Sport">
                 <div class="details-custom">
                     <h4>BMW 7 Series M Sport 320 hp</h4>
                     <p>25,000 km | 10/2020 | 320 hp | Automatic | Diesel</p>
@@ -892,9 +863,9 @@
                 </div>
             </div>
         </a>        
-        <a href="BMW8-preview.html" class="card-link">
+        <a href="BMW8-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../BMW/M8/coupe/b.jpg" alt="BMW 8 Coupe">
+                <img src="BMW/M8/coupe/b.jpg" alt="BMW 8 Coupe">
                 <div class="details-custom">
                     <h4>BMW 8 Series Coupe 530 hp</h4>
                     <p>20,000 km | 07/2020 | 530 hp | Automatic | Petrol</p>
@@ -910,9 +881,9 @@
                 </div>
             </div>
         </a>        
-        <a href="M8-preview.html" class="card-link">
+        <a href="M8-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../BMW/M8/normal/b.jpg" alt="BMW M8">
+                <img src="BMW/M8/normal/b.jpg" alt="BMW M8">
                 <div class="details-custom">
                     <h4>BMW M8 Gran Coupe</h4>
                     <p>8,500 km | 11/2020 | 625 hp | Automatic | Petrol</p>
@@ -930,9 +901,9 @@
         </a>
         
         
-        <a href="Ccoupe-preview.html" class="card-link">
+        <a href="Ccoupe-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/C-class/coupe/c.jfif" alt="C Coupe">
+                <img src="Mercedes-Benz/C-class/coupe/c.jfif" alt="C Coupe">
                 <div class="details-custom">
                     <h4>Mercedes-Benz C-Class Coupe 2023</h4>
                     <p>13,500 km | 03/2023 | 420 hp | Automatic | Petrol</p>
@@ -949,9 +920,9 @@
             </div>
         </a>
         
-        <a href="Ckaravan-preview.html" class="card-link">
+        <a href="Ckaravan-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/C-class/karavan/c.jfif" alt="C Karavan">
+                <img src="Mercedes-Benz/C-class/karavan/c.jfif" alt="C Karavan">
                 <div class="details-custom">
                     <h4>Mercedes-Benz C-Class Estate 2023</h4>
                     <p>12,000 km | 02/2023 | 390 hp | Automatic | Diesel</p>
@@ -968,9 +939,9 @@
             </div>
         </a>
         
-        <a href="Csedan-preview.html" class="card-link">
+        <a href="Csedan-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/C-class/normal/c.jfif" alt="C Sedan">
+                <img src="Mercedes-Benz/C-class/normal/c.jfif" alt="C Sedan">
                 <div class="details-custom">
                     <h4>Mercedes-Benz C-Class Sedan 2023</h4>
                     <p>10,000 km | 04/2023 | 370 hp | Automatic | Petrol</p>
@@ -987,9 +958,9 @@
             </div>
         </a>
         
-        <a href="Ecoupe-preview.html" class="card-link">
+        <a href="Ecoupe-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/E-class/coupe/e.jfif" alt="E Coupe">
+                <img src="Mercedes-Benz/E-class/coupe/e1.jfif" alt="E Coupe">
                 <div class="details-custom">
                     <h4>Mercedes-Benz E-Class Coupe 2022</h4>
                     <p>15,000 km | 05/2022 | 400 hp | Automatic | Petrol</p>
@@ -1006,9 +977,9 @@
             </div>
         </a>
         
-        <a href="/Ekaracan-preview.html" class="card-link">
+        <a href="Ekaracan-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/E-class/karavan/e.jfif" alt="E Karavan">
+                <img src="Mercedes-Benz/E-class/karavan/e.jfif" alt="E Karavan">
                 <div class="details-custom">
                     <h4>Mercedes-Benz E-Class Estate 2022</h4>
                     <p>12,500 km | 06/2022 | 420 hp | Automatic | Diesel</p>
@@ -1025,9 +996,9 @@
             </div>
         </a>
         
-        <a href="Esedan-preview.html" class="card-link">
+        <a href="Esedan-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/E-class/normal/e.jfif" alt="E Sedan">
+                <img src="Mercedes-Benz/E-class/normal/mercedes-e-class.jfif" alt="E Sedan">
                 <div class="details-custom">
                     <h4>Mercedes-Benz E-Class Sedan 2022</h4>
                     <p>10,500 km | 07/2022 | 370 hp | Automatic | Petrol</p>
@@ -1044,9 +1015,9 @@
             </div>
         </a>
         
-        <a href="../cars-preview/Gblue-preview.html" class="card-link">
+        <a href="Gblue-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/G-class/blue/g.jfif" alt="G Blue">
+                <img src="Mercedes-Benz/G-class/blue/g.jfif" alt="G Blue">
                 <div class="details-custom">
                     <h4>Mercedes-Benz G-Class 2021</h4>
                     <p>20,000 km | 08/2021 | 577 hp | Automatic | Petrol</p>
@@ -1063,9 +1034,9 @@
             </div>
         </a>
         
-        <a href="Gclass-preview.html" class="card-link">
+        <a href="Gclass-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/G-class/normal/g.jfif" alt="G Class">
+                <img src="Mercedes-Benz/G-class/normal/g.jfif" alt="G Class">
                 <div class="details-custom">
                     <h4>Mercedes-Benz G-Class 2021</h4>
                     <p>25,000 km | 09/2021 | 577 hp | Automatic | Petrol</p>
@@ -1082,9 +1053,9 @@
             </div>
         </a>
         
-        <a href="Scoupe-preview.html" class="card-link">
+        <a href="Scoupe-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/S-class/coupe/s.jfif" alt="S Coupe">
+                <img src="Mercedes-Benz/S-class/coupe/s.jfif" alt="S Coupe">
                 <div class="details-custom">
                     <h4>Mercedes-Benz S-Class Coupe 2022</h4>
                     <p>18,000 km | 10/2022 | 612 hp | Automatic | Petrol</p>
@@ -1101,9 +1072,9 @@
             </div>
         </a>
         
-        <a href="Ssedan-preview.html" class="card-link">
+        <a href="Ssedan-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Mercedes-Benz/S-class/normal/s.jfif" alt="S Sedan">
+                <img src="Mercedes-Benz/S-class/normal/s.jfif" alt="S Sedan">
                 <div class="details-custom">
                     <h4>Mercedes-Benz S-Class Sedan 2022</h4>
                     <p>22,000 km | 11/2022 | 612 hp | Automatic | Petrol</p>
@@ -1120,9 +1091,9 @@
             </div>
         </a>
         
-        <a href="991-preview.html" class="card-link">
+        <a href="991-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Porsche/911/991/p.jpg" alt="991">
+                <img src="Porsche/911/991/p.jpg" alt="991">
                 <div class="details-custom">
                     <h4>Porsche 911 991 Turbo 2020</h4>
                     <p>15,500 km | 12/2020 | 540 hp | Automatic | Petrol</p>
@@ -1139,9 +1110,9 @@
             </div>
         </a>
         
-        <a href="992-preview.html" class="card-link">
+        <a href="992-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Porsche/911/992/p.jpg" alt="992">
+                <img src="Porsche/911/992/p.jpg" alt="992">
                 <div class="details-custom">
                     <h4>Porsche 911 992 Turbo 2021</h4>
                     <p>14,000 km | 01/2021 | 580 hp | Automatic | Petrol</p>
@@ -1158,9 +1129,9 @@
             </div>
         </a>
         
-        <a href="taycan-preview.html" class="card-link">
+        <a href="taycan-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Porsche/taycan/p.jpg" alt="Taycan">
+                <img src="Porsche/taycan/p.jpg" alt="Taycan">
                 <div class="details-custom">
                     <h4>Porsche Taycan 2022</h4>
                     <p>10,000 km | 02/2022 | 625 hp | Automatic | Electric</p>
@@ -1177,9 +1148,9 @@
             </div>
         </a>
         
-        <a href="dawn-preview.html" class="card-link">
+        <a href="dawn-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Rolls Royce/dawn/r.jpg" alt="Rolls-Royce Dawn">
+                <img src="Rolls Royce/dawn/r.jpg" alt="Rolls-Royce Dawn">
                 <div class="details-custom">
                     <h4>Rolls-Royce Dawn 420 kW</h4>
                     <p>13,500 km | 03/2018 | 420 kW (571 hp) | Automatic | Petrol</p>
@@ -1198,9 +1169,9 @@
             </div>
         </a>
         
-        <a href="ghost-preview.html" class="card-link">
+        <a href="ghost-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Rolls Royce/ghost/r.jpg" alt="Rolls-Royce Ghost">
+                <img src="Rolls Royce/ghost/r.jpg" alt="Rolls-Royce Ghost">
                 <div class="details-custom">
                     <h4>Rolls-Royce Ghost 420 kW</h4>
                     <p>15,000 km | 05/2017 | 420 kW (571 hp) | Automatic | Petrol</p>
@@ -1219,9 +1190,9 @@
             </div>
         </a>
         
-        <a href="phantom-preview.html" class="card-link">
+        <a href="phantom-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Rolls Royce/phantom/r.jpg" alt="Rolls-Royce Phantom">
+                <img src="Rolls Royce/phantom/r.jpg" alt="Rolls-Royce Phantom">
                 <div class="details-custom">
                     <h4>Rolls-Royce Phantom 420 kW</h4>
                     <p>9,000 km | 06/2019 | 420 kW (571 hp) | Automatic | Petrol</p>
@@ -1240,9 +1211,9 @@
             </div>
         </a>
         
-        <a href="wraith-preview.html" class="card-link">
+        <a href="wraith-preview.php" class="card-link">
             <div class="card-custom">
-                <img src="../Rolls Royce/wraith/r.jpg" alt="Rolls-Royce Wraith">
+                <img src="Rolls Royce/wraith/r.jpg" alt="Rolls-Royce Wraith">
                 <div class="details-custom">
                     <h4>Rolls-Royce Wraith 420 kW</h4>
                     <p>10,000 km | 01/2018 | 420 kW (571 hp) | Automatic | Petrol</p>

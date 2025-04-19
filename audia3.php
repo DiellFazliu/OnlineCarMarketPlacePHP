@@ -1,9 +1,255 @@
+<?php
+define('SITE_NAME', 'Car Marketplace');
+define('DEFAULT_CURRENCY', '€');
+define('TRANSPORT_FEE', 757);
+define('DEFAULT_RESULTS_COUNT', 23049);
+
+define('EMAIL_PATTERN', '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
+define('PHONE_PATTERN', '/^\+?\d{10,15}$/');
+define('PRICE_PATTERN', '/^\d+(\.\d{1,2})?$/');
+
+$pageTitle = "Car Listings";
+$totalResults = DEFAULT_RESULTS_COUNT;
+
+
+class Car
+{
+    protected $id;
+    protected $brand;
+    protected $model;
+    protected $price;
+    protected $year;
+    protected $mileage;
+    protected $power;
+    protected $fuelType;
+    protected $image;
+    protected $features = [];
+
+    public function __construct($id, $brand, $model, $price, $year, $mileage, $power, $fuelType, $image, $features = [])
+    {
+        $this->id = $id;
+        $this->brand = $brand;
+        $this->model = $model;
+        $this->price = $price;
+        $this->year = $year;
+        $this->mileage = $mileage;
+        $this->power = $power;
+        $this->fuelType = $fuelType;
+        $this->image = $image;
+        $this->features = $features;
+    }
+
+
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getBrand()
+    {
+        return $this->brand;
+    }
+    public function getModel()
+    {
+        return $this->model;
+    }
+    public function getPrice()
+    {
+        return $this->price;
+    }
+    public function getYear()
+    {
+        return $this->year;
+    }
+    public function getMileage()
+    {
+        return $this->mileage;
+    }
+    public function getPower()
+    {
+        return $this->power;
+    }
+    public function getFuelType()
+    {
+        return $this->fuelType;
+    }
+    public function getImage()
+    {
+        return $this->image;
+    }
+    public function getFeatures()
+    {
+        return $this->features;
+    }
+
+
+    public function setPrice($price)
+    {
+        if (preg_match(PRICE_PATTERN, $price)) {
+            $this->price = $price;
+            return true;
+        }
+        return false;
+    }
+
+
+    public function displayInfo()
+    {
+        return "{$this->mileage} km | {$this->year} | {$this->power} hp | {$this->fuelType}";
+    }
+
+    public function calculateMonthlyPayment($months = 60, $interest = 0.05)
+    {
+        $monthlyRate = $interest / 12;
+        $payment = ($this->price * $monthlyRate) / (1 - pow(1 + $monthlyRate, -$months));
+        return round($payment, 2);
+    }
+}
+
+class ElectricCar extends Car
+{
+    private $batteryCapacity;
+    private $range;
+
+    public function __construct($id, $brand, $model, $price, $year, $mileage, $power, $image, $features, $batteryCapacity, $range)
+    {
+        parent::__construct($id, $brand, $model, $price, $year, $mileage, $power, 'Electric', $image, $features);
+        $this->batteryCapacity = $batteryCapacity;
+        $this->range = $range;
+    }
+
+    public function getBatteryCapacity()
+    {
+        return $this->batteryCapacity;
+    }
+    public function getRange()
+    {
+        return $this->range;
+    }
+}
+
+
+$models = [
+    'Mercedes' => ["C Class", "E Class", "S Class", "G Class"],
+    'Audi' => ["A3", "A6", "A7", "A8"],
+    'BMW' => ["Series 3", "Series 4", "Series 7", "Series 8"],
+    'Porsche' => ["Taycan", "991", "992"],
+    'Rolls Royce' => ["Phantom", "Dawn", "Wraith", "Ghost"]
+];
+
+$combinations = [
+    "mercedes" => "Mercedes.php",
+    "mercedes-c-class" => "mercedesC.php",
+    "mercedes-e-class" => "mercedesE.php",
+    "mercedes-s-class" => "mercedesS.php",
+    "mercedes-g-class" => "mercedesG.php",
+    "bmw" => "BMW.php",
+    "bmw-series-3" => "bmwm3.php",
+    "bmw-series-4" => "bmwm4.php",
+    "bmw-series-7" => "bmw7.php",
+    "bmw-series-8" => "bmw8.php",
+    "audi" => "Audi.php",
+    "audi-a3" => "audia3.php",
+    "audi-a6" => "audia6.php",
+    "audi-a7" => "audia7.php",
+    "audi-a8" => "audia8.php",
+    "porsche" => "Porsche.php",
+    "porsche-911" => "porsche911.php",
+    "porsche-taycan" => "porschetaycan.php",
+    "rollsroyce" => "RollsRoyce.php",
+    "rollsroyce-dawn" => "rollsroycedawn.php",
+    "rollsroyce-ghost" => "rollsroyceghost.php",
+    "rollsroyce-phantom" => "rollsroycephantom.php",
+    "rollsroyce-wraith" => "rollsroycewraith.php"
+];
+
+
+$cars = [
+    new Car(
+        1,
+        'Audi',
+        'A3',
+        35835,
+        '03/2024',
+        0,
+        320,
+        'Petrol',
+        'Audi/A3/normal/a.jfif',
+        ['Ulese sportive', 'Auto parking', 'Quattro']
+    ),
+    new Car(
+        2,
+        'Audi',
+        'A3 Coupe',
+        25750,
+        '03/2019',
+        123500,
+        200,
+        'Diesel',
+        'Audi/A3/kabriolet/a.jfif',
+        ['Ulese me nxemje', 'Funksion masazhi ne ulese', 'Timonin me nxemje']
+    )
+];
+
+
+usort($cars, function ($a, $b) {
+    return $a->getPrice() <=> $b->getPrice();
+});
+
+
+session_start();
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    if (isset($_POST['email']) && !preg_match(EMAIL_PATTERN, $_POST['email'])) {
+        $emailError = "Invalid email format";
+    }
+
+
+    if (isset($_POST['filter'])) {
+        $selectedBrand = $_POST['brand'] ?? '';
+        $selectedModel = $_POST['model'] ?? '';
+
+        if ($selectedBrand) {
+            $totalResults = count(array_filter($cars, function ($car) use ($selectedBrand, $selectedModel) {
+                $brandMatch = $car->getBrand() === $selectedBrand;
+                $modelMatch = !$selectedModel || stripos($car->getModel(), $selectedModel) !== false;
+                return $brandMatch && $modelMatch;
+            }));
+        }
+    }
+}
+
+
+function displayFeatures($features, $maxVisible = 3)
+{
+    $visible = array_slice($features, 0, $maxVisible);
+    $hiddenCount = count($features) - $maxVisible;
+
+    $html = '';
+    foreach ($visible as $feature) {
+        $html .= "<span>$feature</span>";
+    }
+
+    if ($hiddenCount > 0) {
+        $html .= "<span>+$hiddenCount more</span>";
+    }
+
+    return $html;
+}
+
+function formatPrice($price)
+{
+    return number_format($price, 2, '.', ',') . DEFAULT_CURRENCY;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($pageTitle) ?></title>
     <link rel="stylesheet" href="menubar.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
@@ -32,7 +278,7 @@
         justify-content: space-between;
         margin: 20px auto;
         max-width: 1200px;
-        margin-top: 80px;
+        margin-top: 100px;
     }
 
     .filters-custom {
@@ -196,12 +442,13 @@
     .guarantee-item a:hover {
         text-decoration: underline;
     }
+
     footer {
-    margin-top: 20px;
-    background-color: #333;
-    color: white;
-    text-align: center;
-}
+        margin-top: 20px;
+        background-color: #333;
+        color: white;
+        text-align: center;
+    }
 
     .card-custom {
         background-color: white;
@@ -317,6 +564,11 @@
         display: block;
     }
 
+    #brandMenu-custom,
+    #modelMenu-custom {
+        list-style: none;
+    }
+
 
     @media (min-width: 1025px) {
         .filter-btn {
@@ -336,6 +588,7 @@
         .close-btn-test {
             display: block;
         }
+
         .guarantee-section {
             position: relative;
             margin-top: 20px;
@@ -382,7 +635,7 @@
             margin-top: 20px;
             margin-right: 0;
         }
-        
+
     }
 
 
@@ -439,232 +692,129 @@
 <body>
     <div id="Banner"></div>
     <script>
-        fetch('./../banner.html')
+        fetch('banner.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('Banner').innerHTML = data;
             });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const script = document.createElement('script');
-            script.src = 'banner.js';
-            document.body.appendChild(script);
-        });
-    </script>
+
     <button class="filter-btn">Show Filters</button>
     <div id="container-custom">
         <div class="filters-custom" style="flex: 1 1 35%;">
-            <button class="close-btn-test" style="width: 30px; height: 40px;border-radius: 10px;">&times;</button>
+            <button class="close-btn-test">&times;</button>
             <div class="still">
                 <h3>Filter Options</h3>
-                <div class="horizontale-custom">
-                    <div>
-                        <button class="btnMenu-custom" id="brandButton-custom">Brand
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#9660;</button>
-                        <ul style="list-style: none; padding: 0; margin: 0; display: none; max-height: 100px; overflow-y: scroll; border: 1px solid #ddd;"
-                            class="Menu-custom" id="brandMenu-custom">
-                            <li><a href="#" data-brand="Mercedes">Mercedes Benz</a></li>
-                            <li><a href="#" data-brand="Audi">Audi</a></li>
-                            <li><a href="#" data-brand="BMW">BMW</a></li>
-                            <li><a href="#" data-brand="Porsche">Porsche</a></li>
-                            <li><a href="#" data-brand="Rolls Royce">Rolls Royce</a></li>
-                        </ul>
+                <form method="POST">
+                    <div class="horizontale-custom">
+                        <div>
+                            <button type="button" class="btnMenu-custom" id="brandButton-custom">Brand &#9660;</button>
+                            <ul class="Menu-custom" id="brandMenu-custom" style="display: none;">
+                                <?php foreach ($models as $brand => $modelList): ?>
+                                    <li><a href="#" data-brand="<?= htmlspecialchars($brand) ?>"><?= htmlspecialchars($brand) ?></a></li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <input type="hidden" name="brand" id="selectedBrand" value="">
+                        </div>
+                        <div>
+                            <button type="button" class="btnMenu-custom" id="modelButton-custom">Model &#9660;</button>
+                            <ul class="Menu-custom" id="modelMenu-custom" style="display: none;"></ul>
+                            <input type="hidden" name="model" id="selectedModel" value="">
+                        </div>
                     </div>
-                    <div>
-                        <button class="btnMenu-custom"
-                            id="modelButton-custom">Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#9660;</button>
-                        <ul style="list-style: none; padding: 0; margin: 0; display: none; max-height: 150px; overflow-y: scroll; border: 1px solid #ddd;"
-                            class="Menu-custom" id="modelMenu-custom">
-                        </ul>
-                    </div>
-                </div>
-                <input id="extrapart-custom" class="extra-part-custom" type="submit" value="23049 total results"
-                    style="height: 32px; width: 170px; border:#8de020">
+                    <input type="submit" name="filter" id="extrapart-custom" class="extra-part-custom"
+                        value="<?= $totalResults ?> total results">
+                </form>
 
                 <script>
-                    $(document).ready(function () {
+                    const models = <?= json_encode($models) ?>;
+                    const combinations = <?= json_encode($combinations) ?>;
+
+                    $(document).ready(function() {
                         let selectedBrand = "";
                         let selectedModel = "";
 
-                        $(".filter-btn").click(function () {
+                        $(".filter-btn").click(function() {
                             $(".filters-custom").toggleClass("active");
                         });
 
-                        $(".close-btn-test").click(function () {
+                        $(".close-btn-test").click(function() {
                             $(".filters-custom").removeClass("active");
                         });
-                        const models = {
-                            Mercedes: ["C Class", "E Class", "S Class", "G Class"],
-                            Audi: ["A3", "A6", "A7", "A8"],
-                            BMW: ["Series 3", "Series 4", "Series 7", "Series 8"],
-                            Porsche: ["Taycan", "991"],
-                            "Rolls Royce": ["Phantom", "Dawn", "Wraith", "Ghost"]
-                        };
 
-                       
-                        const combinations = {
-                            "mercedes": "Mercedes.html",
-                            "mercedes-c-class": "mercedesC.html",
-                            "mercedes-e-class": "mercedesE.html",
-                            "mercedes-s-class": "mercedesS.html",
-                            "mercedes-g-class": "mercedesG.html",
-                            "bmw": "BMW.html",
-                            "bmw-series-3": "bmwm3.html",
-                            "bmw-series-4": "bmwm4.html",
-                            "bmw-series-7": "bmw7.html",
-                            "bmw-series-8": "bmw8.html",
-                            "audi": "Audi.html",
-                            "audi-a3": "audia3.html",
-                            "audi-a6": "audia6.html",
-                            "audi-a7": "audia7.html",
-                            "audi-a8": "audia8.html",
-                            "porsche": "Porsche.html",
-                            "porsche-911": "porsche911.html",
-                            "porsche-taycan": "porschetaycan.html",
-                            "rollsroyce": "RollsRoyce.html",
-                            "rollsroyce-dawn": "rollsroycedawn.html",
-                            "rollsroyce-ghost": "rollsroyceghost.html",
-                            "rollsroyce-phantom": "rollsroycephantom.html",
-                            "rollsroyce-wraith": "rollsroycewraith.html"
-                        };
-
-                        
-                        $("#brandMenu-custom a").click(function (e) {
+                        $("#brandMenu-custom a").click(function(e) {
                             e.preventDefault();
                             selectedBrand = $(this).data("brand");
                             $("#brandButton-custom").text(selectedBrand);
-                            $("#brandMenu-custom").slideUp(500); 
+                            $("#selectedBrand").val(selectedBrand);
+                            $("#brandMenu-custom").slideUp(500);
 
-                           
                             const modelList = models[selectedBrand] || [];
-                            const modelItems = modelList.map(model => `<li><a href="#">${model}</a></li>`).join("");
+                            const modelItems = modelList.map(model => `<li><a href="#" data-model="${model}">${model}</a></li>`).join("");
                             $("#modelMenu-custom").html(modelItems);
-                            $("#modelButton-custom").text("Model"); 
-
-                            $("#extrapart-custom").val("Search " + selectedBrand);
+                            $("#modelButton-custom").text("Model");
                         });
+                        
 
-                        $("#modelMenu-custom").on("click", "a", function (e) {
+                        $("#modelMenu-custom").on("click", "a", function(e) {
                             e.preventDefault();
-                            selectedModel = $(this).text();
+                            selectedModel = $(this).data("model");
                             $("#modelButton-custom").text(selectedModel);
+                            $("#selectedModel").val(selectedModel);
                             $("#modelMenu-custom").slideUp(500);
+                        });
 
-                            
-                            $("#extrapart-custom").val("Search " + selectedBrand + " " + selectedModel); 
-                        });
-                        $("#extrapart-custom").click(function () {
-                            if (selectedBrand) {
-            
-                                let key = selectedBrand.toLowerCase().replace(/\s+/g, '-');
-                                if (selectedModel) {
-                                    key += '-' + selectedModel.toLowerCase().replace(/\s+/g, '-');
-                                }
-                                if (combinations[key]) {
-                                    window.location.href = combinations[key];
-                                } else {
-                                    alert("No page found for this combination. Please select a valid brand and model.");
-                                }
-                            } else {
-                                alert("Please select a brand.");
-                            }
-                        });
-                        $(".btnMenu-custom").click(function () {
+                        $(".btnMenu-custom").click(function() {
                             const menuId = $(this).attr("id").replace("Button-custom", "Menu-custom");
-                            $(".Menu-custom").not(`#${menuId}`).slideUp(500); 
-                            $(`#${menuId}`).stop(true, true).slideToggle(500); 
+                            $(".Menu-custom").not(`#${menuId}`).slideUp(500);
+                            $(`#${menuId}`).stop(true, true).slideToggle(500);
                         });
                     });
-
                 </script>
             </div>
+
             <div class="guarantee-section">
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>Kthim të parave</h3>
                     <p>Nëse nuk ju pëlqen vetura, kthejeni brenda 14 ditëve.</p>
                 </div>
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>Blerje e sigurt</h3>
                     <p>Ne garantojmë gjendjen teknike të çdo veture.</p>
                 </div>
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>6 muaj garancion</h3>
                     <p>Ofrojmë çdo veturë me garancion.</p>
-                    <a href="#">Më shumë rreth garancive &rarr;</a>
+                    <a href="howitworks.php">Më shumë rreth garancive &rarr;</a>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-    </div>
-    <div class="listings-custom" style="flex: 1 1 60%;">
-        <a href="A3-preview.html" class="card-link">
-            <div class="card-custom">
-                <img src="../Audi/A3/normal/a.jfif" alt="Audi A3">
-                <div class="details-custom">
-                    <h4>Audi A3 00KM</h4>
-                    <p>00 km | 03/2024 | 320 hp | Automatic | Benzin</p>
-                    <div class="tags-custom">
-                        <span>Ulese sportive</span>
-                        <span>Auto parking</span>
-                        <span>Quattro</span>
-                        <span>+8 more</span>
+
+        <div class="listings-custom" style="flex: 1 1 60%;">
+            <?php foreach ($cars as $car): ?>
+                <a href="<?= strtolower($car->getBrand()) . '-' . strtolower(str_replace(' ', '-', $car->getModel())) ?>-preview.php" class="card-link">
+                    <div class="card-custom">
+                        <img src="<?= htmlspecialchars($car->getImage()) ?>" alt="<?= htmlspecialchars($car->getBrand() . ' ' . $car->getModel()) ?>">
+                        <div class="details-custom">
+                            <h4><?= htmlspecialchars($car->getBrand() . ' ' . $car->getModel()) ?></h4>
+                            <p><?= htmlspecialchars($car->displayInfo()) ?></p>
+                            <div class="tags-custom">
+                                <?= displayFeatures($car->getFeatures()) ?>
+                            </div>
+                            <p class="location-custom">Germany: transport: <?= TRANSPORT_FEE ?><?= DEFAULT_CURRENCY ?></p>
+                            <p class="monthly-payment-custom">Monthly payment: <?= $car->calculateMonthlyPayment() ?><?= DEFAULT_CURRENCY ?></p>
+                            <p class="price-custom"><?= formatPrice($car->getPrice()) ?></p>
+                        </div>
                     </div>
-                    <p class="location-custom">Germany: transport: 930€</p>
-                    <p class="monthly-payment-custom">Monthly payment: 300€</p>
-                    <p class="price-custom">35,835€</p>
-                </div>
-            </div>
-        </a>
-        
-        <a href="A3Coupe-preview.html" class="card-link">
-            <div class="card-custom">
-                <img src="../Audi/A3/kabriolet/a.jfif" alt="Audi A3 Coupe">
-                <div class="details-custom">
-                    <h4>Audi A3 Coupe 200hp</h4>
-                    <p>123,500 km | 03/2019 | 200hp(Stage 1) | Automatic | Diesel</p>
-                    <div class="tags-custom">
-                        <span>Ulese me nxemje</span>
-                        <span>Funksion masazhi ne ulese</span>
-                        <span>Timonin me nxemje</span>
-                        <span>+4 more</span>
-                    </div>
-                    <p class="location-custom">Germany: transport: 757€</p>
-                    <p class="monthly-payment-custom">Monthly payment: 215€</p>
-                    <p class="price-custom">25,750€</p>
-                </div>
-            </div>
-        </a>
-        
-    
+                </a>
+            <?php endforeach; ?>
+        </div>
     </div>
-    </div>
-    <div id="Footer"></div>
-    <script>
-        fetch('../footer.html')
-          .then(response => response.text())
-          .then(data => {
-            document.getElementById('Footer').innerHTML = data;
-          });
-      </script>
-      <script>document.addEventListener("scroll", () => {
-        const footer = document.querySelector(".footer");
-        const filters = document.querySelector(".filters-custom");
-        const footerTop = footer.getBoundingClientRect().top;
-        const filtersHeight = filters.offsetHeight;
-    
-        if (footerTop < filtersHeight + 90) { 
-            filters.style.position = "absolute";
-            filters.style.top = `${window.scrollY + footerTop - filtersHeight}px`;
-        } else {
-            filters.style.position = "fixed";
-            filters.style.top = "90px";
-        }
-    });</script>
+
+
 </body>
 
 </html>

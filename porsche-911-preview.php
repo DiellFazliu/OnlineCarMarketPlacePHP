@@ -18,7 +18,6 @@
             background-color: #f4f4f9;
         }
 
-        /* Title */
         #titulli {
             font-size: 2.5rem;
             text-align: center;
@@ -26,7 +25,6 @@
             color: #000;
         }
 
-        /* Logos Section */
         .logos {
             display: flex;
             flex-wrap: wrap;
@@ -52,7 +50,6 @@
             width: 30px;
         }
 
-        /* Main Content */
         .container {
             display: flex;
             flex-wrap: wrap;
@@ -286,7 +283,6 @@
             display: flex;
             justify-content: space-around;
             align-items: stretch;
-            /* Barazon lartësinë e të gjithë div-ëve */
             background-color: white;
             border-radius: 10px;
             padding: 20px;
@@ -302,16 +298,13 @@
             padding: 10px;
             margin: 0 10px;
             border-right: 1px solid #ccc;
-            /* Vijë ndarëse në të djathtë */
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* Përmbajtja qendrore vertikalisht */
         }
 
         .guarantee-item:last-child {
             border-right: none;
-            /* Hiq vijën ndarëse për div-in e fundit */
         }
 
 
@@ -343,24 +336,24 @@
         .guarantee-item a:hover {
             text-decoration: underline;
         }
+
         #previousPage {
-        padding: 10px 20px;
-        background-color: #f4f4f9;
-        color: green;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        margin: 20px;
-        margin-top: 60px;
-        margin-bottom: -100px;
-    }
+            padding: 10px 20px;
+            background-color: #f4f4f9;
+            color: green;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 20px;
+            margin-top: 60px;
+            margin-bottom: -100px;
+        }
 
-    #previousPage:hover {
-        color: #8dde20;
-    }
+        #previousPage:hover {
+            color: #8dde20;
+        }
 
-        /* Footer */
         footer {
             background-color: #8dde20;
             color: white;
@@ -392,7 +385,8 @@
                 font-size: 1.3rem;
                 color: solid black;
             }
-            .logos{
+
+            .logos {
                 display: none;
             }
 
@@ -404,7 +398,7 @@
 <body>
     <div id="header" style="position: absolute; top: auto; left: auto;width: 100%; padding: 10px 0;"></div>
     <script>
-        fetch('banner.php')
+        fetch('banner.html')
             .then(response => {
                 if (!response.ok) throw new Error("Failed to fetch banner.html");
                 return response.text();
@@ -415,7 +409,7 @@
             .catch(error => console.error(error));
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const script = document.createElement('script');
             script.src = 'banner.js';
             document.body.appendChild(script);
@@ -425,7 +419,7 @@
         <button id="previousPage">Previous Page</button>
     </div>
     <script>
-        document.getElementById('previousPage').addEventListener('click', function () {
+        document.getElementById('previousPage').addEventListener('click', function() {
             window.history.back();
         });
     </script>
@@ -434,18 +428,19 @@
     $porsche991 = new car("Porsche", "911 991 Turbo", 2020, "3.8L V6", 540, "Automatik", "Benzinë", 15500, "12/2020", 120000);
     $porsche991->setImages([
         "Porsche/911/991/p.jpg",
-        "Porsche/911/991/p2.jpg", 
-        "Porsche/911/991/p3.jpg", 
-        "Porsche/911/991/p4.jpg", 
-        "Porsche/911/991/p5.jpg", 
-        "Porsche/911/991/p6.jpg", 
-        "Porsche/911/991/p7.jpg", 
-        "Porsche/911/991/p8.jpg", 
-        "Porsche/911/991/p9.jpg", 
-        "Porsche/911/991/p10.jpg", 
-        "Porsche/911/991/p11.jpg", 
-        "Porsche/911/991/p12.jpg", 
-        "Porsche/911/991/p13.jpg"]);
+        "Porsche/911/991/p2.jpg",
+        "Porsche/911/991/p3.jpg",
+        "Porsche/911/991/p4.jpg",
+        "Porsche/911/991/p5.jpg",
+        "Porsche/911/991/p6.jpg",
+        "Porsche/911/991/p7.jpg",
+        "Porsche/911/991/p8.jpg",
+        "Porsche/911/991/p9.jpg",
+        "Porsche/911/991/p10.jpg",
+        "Porsche/911/991/p11.jpg",
+        "Porsche/911/991/p12.jpg",
+        "Porsche/911/991/p13.jpg"
+    ]);
 
     $services = [
         new Service("CarAudit™", 67),
@@ -494,7 +489,7 @@
                         <img src="<?php echo $image; ?>" alt="Slide <?php echo $index + 1; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>">
                     <?php endforeach; ?>
                 </div>
-                
+
                 <script>
                     function openSlide(slideNumber) {
                         const baseUrl = "911-slideshow.php";
@@ -539,8 +534,8 @@
                 <div class="right">
                     <ul>
                         <?php foreach ($porsche991->getFeatures() as $feature => $value) : ?>
-                        <li><strong><?php echo $feature; ?>:</strong> <span><?php echo $value; ?><span></libxml_clear_errors>
-                        <?php endforeach; ?>
+                            <li><strong><?php echo $feature; ?>:</strong> <span><?php echo $value; ?><span></libxml_clear_errors>
+                                    <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -568,16 +563,16 @@
                 <p><b>Porsche 911 991 Turbo 2020</b> është një coupe sportiv që ofron një performancë të jashtëzakonshme dhe një dizajn të klasit të parë. Ja një përshkrim i shkurtër:
 
                     <br><br><b>Performanca:</b><br>
-                     Motori: 3.8L Twin-turbocharged 6-cylindërsh me 540 hp dhe 710 Nm moment rrotullimi.
-                     Transmetimi: Automatik 7-shpejtësi PDK, me mundësi për all-wheel drive (AWD).
-                     Shpejtësia: Arrin 0-100 km/h në 3.0 sekonda.
+                    Motori: 3.8L Twin-turbocharged 6-cylindërsh me 540 hp dhe 710 Nm moment rrotullimi.
+                    Transmetimi: Automatik 7-shpejtësi PDK, me mundësi për all-wheel drive (AWD).
+                    Shpejtësia: Arrin 0-100 km/h në 3.0 sekonda.
                     <br><br><b>Dizajni:</b><br>
-                     Pamja e jashtme: Linja të mprehta dhe aerodinamike, grilë frontale të gjerë dhe drita LED për një pamje agresive dhe moderne.
-                     Pamja e brendshme: Kabinë premium me materiale të cilësisë së lartë, sedilje sportivë dhe ekran interaktiv për komandat dhe infotainment.
+                    Pamja e jashtme: Linja të mprehta dhe aerodinamike, grilë frontale të gjerë dhe drita LED për një pamje agresive dhe moderne.
+                    Pamja e brendshme: Kabinë premium me materiale të cilësisë së lartë, sedilje sportivë dhe ekran interaktiv për komandat dhe infotainment.
                     <br><br><b>Karakteristikat:</b><br>
-                     Teknologji: Apple CarPlay, Android Auto, dhe mundësi për sistemin audio Burmester për cilësi të jashtëzakonshme tingulli.
-                     Siguria: Porsche Stability Management, Porsche Active Suspension Management dhe sisteme asistence për një përvojë të sigurt dhe të fuqishme drejtimi.
-                 </p>
+                    Teknologji: Apple CarPlay, Android Auto, dhe mundësi për sistemin audio Burmester për cilësi të jashtëzakonshme tingulli.
+                    Siguria: Porsche Stability Management, Porsche Active Suspension Management dhe sisteme asistence për një përvojë të sigurt dhe të fuqishme drejtimi.
+                </p>
             </div>
             <div class="pricing-container">
                 <div class="pricing-header">
@@ -585,12 +580,12 @@
                     <div class="price">120 000€</div>
                     <button class="btn" onclick="redirect()">Blej</button>
 
-<script>
-  function redirect() {
-    window.location.href = "payment.php";
-  }
-</script>
-                    <div class="financing"><?php echo $porsche991->formatPrice(1800);?>/muaj</div>
+                    <script>
+                        function redirect() {
+                            window.location.href = "payment.php";
+                        }
+                    </script>
+                    <div class="financing"><?php echo $porsche991->formatPrice(1800); ?>/muaj</div>
                 </div>
 
                 <div class="services">
@@ -598,8 +593,8 @@
                     <?php foreach ($services as $service) : ?>
                         <div class="service-item">
                             <span><?php echo $service->getName(); ?>
-                            <?php if ($service->hasInfo()): ?> 
-                                <span class="info">(i)</span>';
+                                <?php if ($service->hasInfo()): ?>
+                                    <span class="info">(i)</span>';
                                 <?php endif; ?>
                             </span>
                             <span><?php echo $service->isFree() ? 'Falas' : $porsche991->formatPrice($service->getPrice()); ?></span>
