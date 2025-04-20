@@ -123,17 +123,17 @@
 <body>
     <div class="slideshow-container">
         <button class="close-btn" onclick="goBack()">X</button>
-        <img class="img active" src="../Audi/A3/normal/a.jfif" alt="Slide 1">
-        <img class="img" src="../Audi/A3/normal/a1.jfif" alt="Slide 2">
-        <img class="img" src="../Audi/A3/normal/a2.jfif" alt="Slide 3">
-        <img class="img" src="../Audi/A3/normal/a3.jfif" alt="Slide 4">
-        <img class="img" src="../Audi/A3/normal/a4.jfif" alt="Slide 5">
-        <img class="img" src="../Audi/A3/normal/a5.jfif" alt="Slide 6">
-        <img class="img" src="../Audi/A3/normal/a6.jfif" alt="Slide 7">
-        <img class="img" src="../Audi/A3/normal/a7.jfif" alt="Slide 8">
-        <img class="img" src="../Audi/A3/normal/a8.jfif" alt="Slide 9">
-        <img class="img" src="../Audi/A3/normal/a9.jfif" alt="Slide 10">
-        <img class="img" src="../Audi/A3/normal/a10.jfif" alt="Slide 11">
+        <img class="img active" src="Audi/A3/normal/a.jfif" alt="Slide 1">
+        <img class="img" src="Audi/A3/normal/a1.jfif" alt="Slide 2">
+        <img class="img" src="Audi/A3/normal/a2.jfif" alt="Slide 3">
+        <img class="img" src="Audi/A3/normal/a3.jfif" alt="Slide 4">
+        <img class="img" src="Audi/A3/normal/a4.jfif" alt="Slide 5">
+        <img class="img" src="Audi/A3/normal/a5.jfif" alt="Slide 6">
+        <img class="img" src="Audi/A3/normal/a6.jfif" alt="Slide 7">
+        <img class="img" src="Audi/A3/normal/a7.jfif" alt="Slide 8">
+        <img class="img" src="Audi/A3/normal/a8.jfif" alt="Slide 9">
+        <img class="img" src="Audi/A3/normal/a9.jfif" alt="Slide 10">
+        <img class="img" src="Audi/A3/normal/a10.jfif" alt="Slide 11">
 
         <div class="counter" id="counter">1 / 7</div>
 

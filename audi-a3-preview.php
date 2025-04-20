@@ -404,7 +404,7 @@
 <body>
     <div id="header" style="position: absolute; top: auto; left: auto;width: 100%; padding: 10px 0;"></div>
     <script>
-        fetch('banner.php') // Kontrolloni rrugën
+        fetch('banner.html')
             .then(response => {
                 if (!response.ok) throw new Error("Failed to fetch banner.html");
                 return response.text();
