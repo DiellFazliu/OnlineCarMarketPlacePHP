@@ -55,6 +55,9 @@ public function getProductionDate(){
 public function getBasePrice(){
     return $this->basePrice;
 }
+public function getHorsePower(){
+    return $this->horsepower;
+}
 
 public function setImages($images){
     $this->images = $images;

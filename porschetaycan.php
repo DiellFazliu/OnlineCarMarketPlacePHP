@@ -1,3 +1,57 @@
+<?php
+include 'previewOOP.php';
+
+class ElectricCar extends Car {
+    private $batteryCapacity;
+    private $chargingTime;
+    private $rangePerCharge;
+
+    public function __construct($make, $model, $year, $engineSize, $horsepower, $transmission, $fuelType, $mileage, $productionDate, $basePrice, $batteryCapacity, $chargingTime, $rangePerCharge) {
+        parent::__construct($make, $model, $year, $engineSize, $horsepower, $transmission, $fuelType, $mileage, $productionDate, $basePrice);
+        $this->batteryCapacity = $batteryCapacity;
+        $this->chargingTime = $chargingTime;
+        $this->rangePerCharge = $rangePerCharge;
+    }
+
+    public function getBatteryCapacity() {
+        return $this->batteryCapacity;
+    }
+
+    public function getChargingTime() {
+        return $this->chargingTime;
+    }
+
+    public function getRangePerCharge() {
+        return $this->rangePerCharge;
+    }
+    
+    public function getElectricCarInfo() {
+        return "Battery Capacity: " . $this->batteryCapacity . " kWh, Charging Time: " . $this->chargingTime . " hours, Range per Charge: " . $this->rangePerCharge . " km";
+    }
+
+    public function getFeatures() {
+        $parentFeatures = parent::getFeatures();
+        $electricFeatures = [
+            "Kapaciteti i Baterisë" => $this->batteryCapacity . " kWh",
+            "Koha e Karikimit" => $this->chargingTime . " orë",
+            "Vargu për Karikim" => $this->rangePerCharge . " km"
+        ];
+        return array_merge($parentFeatures, $electricFeatures);
+    }
+
+    public function __destruct() {
+        $this->batteryCapacity = null;
+        $this->chargingTime = null;
+        $this->rangePerCharge = null;
+        
+        error_log("ElectricCar object for " . $this->getMake() . " " . $this->getModel() . " destroyed");
+    }
+}
+
+$electricCars = [
+    new ElectricCar("Porsche", "Taycan", 2022, 0, 625, "Automatic", "Electric", 10000, "02/2022", 120000, 93.4, 9.5, 450)
+];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -196,12 +250,13 @@
     .guarantee-item a:hover {
         text-decoration: underline;
     }
+
     footer {
-    margin-top: 20px;
-    background-color: #333;
-    color: white;
-    text-align: center;
-}
+        margin-top: 20px;
+        background-color: #333;
+        color: white;
+        text-align: center;
+    }
 
     .card-custom {
         background-color: white;
@@ -336,6 +391,7 @@
         .close-btn-test {
             display: block;
         }
+
         .guarantee-section {
             position: relative;
             margin-top: 20px;
@@ -382,7 +438,7 @@
             margin-top: 20px;
             margin-right: 0;
         }
-        
+
     }
 
 
@@ -439,14 +495,14 @@
 <body>
     <div id="Banner"></div>
     <script>
-        fetch('./../banner.html')
+        fetch('banner.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('Banner').innerHTML = data;
             });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const script = document.createElement('script');
             script.src = 'banner.js';
             document.body.appendChild(script);
@@ -483,15 +539,15 @@
                     style="height: 32px; width: 170px; border:#8de020">
 
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         let selectedBrand = "";
                         let selectedModel = "";
 
-                        $(".filter-btn").click(function () {
+                        $(".filter-btn").click(function() {
                             $(".filters-custom").toggleClass("active");
                         });
 
-                        $(".close-btn-test").click(function () {
+                        $(".close-btn-test").click(function() {
                             $(".filters-custom").removeClass("active");
                         });
                         const models = {
@@ -502,7 +558,7 @@
                             "Rolls Royce": ["Phantom", "Dawn", "Wraith", "Ghost"]
                         };
 
-                       
+
                         const combinations = {
                             "mercedes": "Mercedes.html",
                             "mercedes-c-class": "mercedesC.html",
@@ -528,34 +584,34 @@
                             "rollsroyce-phantom": "rollsroycephantom.html",
                             "rollsroyce-wraith": "rollsroycewraith.html"
                         };
-                        
-                        $("#brandMenu-custom a").click(function (e) {
+
+                        $("#brandMenu-custom a").click(function(e) {
                             e.preventDefault();
                             selectedBrand = $(this).data("brand");
                             $("#brandButton-custom").text(selectedBrand);
-                            $("#brandMenu-custom").slideUp(500); 
+                            $("#brandMenu-custom").slideUp(500);
 
-                           
+
                             const modelList = models[selectedBrand] || [];
                             const modelItems = modelList.map(model => `<li><a href="#">${model}</a></li>`).join("");
                             $("#modelMenu-custom").html(modelItems);
-                            $("#modelButton-custom").text("Model"); 
+                            $("#modelButton-custom").text("Model");
 
                             $("#extrapart-custom").val("Search " + selectedBrand);
                         });
 
-                        $("#modelMenu-custom").on("click", "a", function (e) {
+                        $("#modelMenu-custom").on("click", "a", function(e) {
                             e.preventDefault();
                             selectedModel = $(this).text();
                             $("#modelButton-custom").text(selectedModel);
                             $("#modelMenu-custom").slideUp(500);
 
-                            
-                            $("#extrapart-custom").val("Search " + selectedBrand + " " + selectedModel); 
+
+                            $("#extrapart-custom").val("Search " + selectedBrand + " " + selectedModel);
                         });
-                        $("#extrapart-custom").click(function () {
+                        $("#extrapart-custom").click(function() {
                             if (selectedBrand) {
-            
+
                                 let key = selectedBrand.toLowerCase().replace(/\s+/g, '-');
                                 if (selectedModel) {
                                     key += '-' + selectedModel.toLowerCase().replace(/\s+/g, '-');
@@ -569,28 +625,27 @@
                                 alert("Please select a brand.");
                             }
                         });
-                        $(".btnMenu-custom").click(function () {
+                        $(".btnMenu-custom").click(function() {
                             const menuId = $(this).attr("id").replace("Button-custom", "Menu-custom");
-                            $(".Menu-custom").not(`#${menuId}`).slideUp(500); 
-                            $(`#${menuId}`).stop(true, true).slideToggle(500); 
+                            $(".Menu-custom").not(`#${menuId}`).slideUp(500);
+                            $(`#${menuId}`).stop(true, true).slideToggle(500);
                         });
                     });
-
                 </script>
             </div>
             <div class="guarantee-section">
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>Kthim të parave</h3>
                     <p>Nëse nuk ju pëlqen vetura, kthejeni brenda 14 ditëve.</p>
                 </div>
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>Blerje e sigurt</h3>
                     <p>Ne garantojmë gjendjen teknike të çdo veture.</p>
                 </div>
                 <div class="guarantee-item">
-                    <img src="../car-logos/shield.png" alt="Icon">
+                    <img src="car-logos/shield.png" alt="Icon">
                     <h3>6 muaj garancion</h3>
                     <p>Ofrojmë çdo veturë me garancion.</p>
                     <a href="#">Më shumë rreth garancive &rarr;</a>
@@ -601,50 +656,28 @@
     </div>
     </div>
     <div class="listings-custom" style="flex: 1 1 60%;">
-
-        <a href="taycan-preview.html" class="card-link">
-            <div class="card-custom">
-                <img src="../Porsche/taycan/p.jpg" alt="Taycan">
-                <div class="details-custom">
-                    <h4>Porsche Taycan 2022</h4>
-                    <p>10,000 km | 02/2022 | 625 hp | Automatic | Electric</p>
-                    <div class="tags-custom">
-                        <span>Heated seats</span>
-                        <span>Massage function</span>
-                        <span>Pneumatic suspension</span>
-                        <span>+3 more</span>
+        <?php foreach ($electricCars as $car): ?>
+            <a href="taycan-preview.php" class="card-link">
+                <div class="card-custom">
+                    <img src="Porsche/taycan/p.jpg" alt="<?= $car->getModel() ?>">
+                    <div class="details-custom">
+                        <h4><?= $car->getMake() ?> <?= $car->getModel() ?> <?= $car->getYear() ?></h4>
+                        <p><?= number_format($car->getMileage()) ?> km | <?= $car->getProductionDate() ?> | <?= $car->getHorsepower() ?> hp | <?= $car->getTransmission() ?> | <?= $car->getFuelType() ?></p>
+                        <div class="tags-custom">
+                            <span>Heated seats</span>
+                            <span>Massage function</span>
+                            <span>Pneumatic suspension</span>
+                            <span>+3 more</span>
+                        </div>
+                        <p class="location-custom">Germany: transport: 1,100€</p>
+                        <p class="monthly-payment-custom">Monthly payment: 2,500€</p>
+                        <p class="price-custom"><?= number_format($car->getBasePrice(), 0, ',', '.') ?>€</p>
                     </div>
-                    <p class="location-custom">Germany: transport: 1,100€</p>
-                    <p class="monthly-payment-custom">Monthly payment: 2,500€</p>
-                    <p class="price-custom">120,000€</p>
                 </div>
-            </div>
-        </a>
-        
+            </a>
+        <?php endforeach; ?>
     </div>
     </div>
-    <div id="Footer"></div>
-    <script>
-        fetch('../footer.html')
-          .then(response => response.text())
-          .then(data => {
-            document.getElementById('Footer').innerHTML = data;
-          });
-      </script>
-      <script>document.addEventListener("scroll", () => {
-        const footer = document.querySelector(".footer");
-        const filters = document.querySelector(".filters-custom");
-        const footerTop = footer.getBoundingClientRect().top;
-        const filtersHeight = filters.offsetHeight;
-    
-        if (footerTop < filtersHeight + 90) { 
-            filters.style.position = "absolute";
-            filters.style.top = `${window.scrollY + footerTop - filtersHeight}px`;
-        } else {
-            filters.style.position = "fixed";
-            filters.style.top = "90px";
-        }
-    });</script>
 </body>
 
 </html>
