@@ -306,7 +306,7 @@
     <div id="white" style="height: 8px;background: white;"></div>
 
     <div id="Footer">
-        <?php include('footer.php'); ?>
+        <?php include('footer.html'); ?>
     </div>
 
     <script>
