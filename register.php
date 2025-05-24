@@ -1,37 +1,32 @@
 <?php
 session_start();
+require_once 'db.php'; // Use the central DB connection
 
-define("MIN_PASSWORD_LENGTH", 8);
-define("MAX_PASSWORD_LENGTH", 16);
+$config = include 'config.php';
+
+define("MIN_PASSWORD_LENGTH", $config['security']['min_password_length']);
+define("MAX_PASSWORD_LENGTH", $config['security']['max_password_length']);
 
 $username_pattern = '/^[a-zA-Z0-9]+$/';
 $email_pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
-$password_pattern = '/^[a-zA-Z0-9!@#$%^&*()_+]{8,16}$/';
+$password_pattern = '/^[a-zA-Z0-9!@#$%^&*()_+]{'.MIN_PASSWORD_LENGTH.','.MAX_PASSWORD_LENGTH.'}$/';
 
-$users = [
-    'Diell' => [
-        'email' => 'diell@gmail.com',
-        'password' => password_hash('12345678', PASSWORD_DEFAULT)
-    ]
-];
-
-class UserRegistration
-{
+class UserRegistration {
     private $username;
     private $email;
     private $password;
     private $confirmPassword;
+    private $db;
 
-    public function __construct($username, $email, $password, $confirmPassword)
-    {
-        $this->username = $username;
-        $this->email = $email;
+    public function __construct($db, $username, $email, $password, $confirmPassword) {
+        $this->db = $db;
+        $this->username = trim($username);
+        $this->email = trim($email);
         $this->password = $password;
         $this->confirmPassword = $confirmPassword;
     }
 
-    public function validateInput()
-    {
+    public function validateInput() {
         global $username_pattern, $email_pattern, $password_pattern;
 
         $errors = [];
@@ -40,6 +35,8 @@ class UserRegistration
             $errors['username'] = "Username cannot be empty";
         } elseif (!preg_match($username_pattern, $this->username)) {
             $errors['username'] = "Username can only contain letters and numbers";
+        } elseif (strlen($this->username) < 3) {
+            $errors['username'] = "Username must be at least 3 characters";
         }
 
         if (empty($this->email)) {
@@ -51,7 +48,7 @@ class UserRegistration
         if (empty($this->password)) {
             $errors['password'] = "Password cannot be empty";
         } elseif (!preg_match($password_pattern, $this->password)) {
-            $errors['password'] = "Password must be 8-16 characters long";
+            $errors['password'] = "Password must be ".MIN_PASSWORD_LENGTH."-".MAX_PASSWORD_LENGTH." characters long";
         }
 
         if (empty($this->confirmPassword)) {
@@ -63,17 +60,45 @@ class UserRegistration
         return $errors;
     }
 
-    public function register(&$users)
-    {
-        if (array_key_exists($this->username, $users)) {
-            return false;
+    public function register() {
+        $errors = [];
+        
+        $stmt = $this->db->prepare("SELECT username FROM Users WHERE username = :username");
+        $stmt->execute([':username' => $this->username]);
+        if ($stmt->fetch()) {
+            $errors['username'] = "Username already exists";
         }
 
-        $users[$this->username] = [
-            'email' => $this->email,
-            'password' => password_hash($this->password, PASSWORD_DEFAULT)
-        ];
-        return true;
+        $stmt = $this->db->prepare("SELECT email FROM Users WHERE email = :email");
+        $stmt->execute([':email' => $this->email]);
+        if ($stmt->fetch()) {
+            $errors['email'] = "Email already registered";
+        }
+
+        if (!empty($errors)) {
+            return $errors;
+        }
+
+        $rememberToken = bin2hex(random_bytes(32));
+        $tokenExpires = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 days
+        
+        $stmt = $this->db->prepare("
+            INSERT INTO Users 
+            (username, email, password_hash, role, remember_token, token_expires, created_at) 
+            VALUES 
+            (:username, :email, :password, :role, :remember_token, :token_expires, NOW())
+        ");
+        
+        $result = $stmt->execute([
+            ':username' => $this->username,
+            ':email' => $this->email,
+            ':password' => password_hash($this->password, PASSWORD_DEFAULT),
+            ':role' => 'user',
+            ':remember_token' => $rememberToken,
+            ':token_expires' => $tokenExpires
+        ]);
+
+        return $result ? true : ['database' => "Registration failed. Please try again."];
     }
 }
 
@@ -84,20 +109,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirmPassword = $_POST['confirmPassword'] ?? '';
 
-    $registration = new UserRegistration($username, $email, $password, $confirmPassword);
+    $registration = new UserRegistration($db, $username, $email, $password, $confirmPassword);
     $errors = $registration->validateInput();
 
     if (empty($errors)) {
-        if ($registration->register($users)) {
+        $result = $registration->register();
+        
+        if ($result === true) {
             $_SESSION['user'] = $username;
+            $_SESSION['role'] = 'user';
             header('Location: project.php');
             exit();
         } else {
-            $errors['username'] = "Username already exists";
+            $errors = array_merge($errors, $result);
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 

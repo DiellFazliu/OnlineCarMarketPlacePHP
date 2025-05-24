@@ -9,20 +9,21 @@ $GLOBALS['login_attempts'] = isset($_SESSION['login_attempts']) ? $_SESSION['log
 $username_pattern = '/^[a-zA-Z0-9]+$/'; 
 $password_pattern = '/^[a-zA-Z0-9!@#$%^&*()_+]{8,16}$/'; 
 
-$users = [
-    'Diell' => [   
-        'password' => password_hash('12345678', PASSWORD_DEFAULT), 
-        'email' => 'diell@gmail.com'                           
-    ]
-];
-
+$db = new PDO('pgsql:host=switchyard.proxy.rlwy.net;port=33345;dbname=railway', 'postgres', 'bpsELXfRwyqjyxghAUnKvuRygaQcSXSc', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES => false,
+    PDO::ATTR_PERSISTENT => false
+]);
 
 class UserAuthenticator {
     private $username;
     private $password;
     private $remember;
+    private $db;
     
-    public function __construct($username, $password, $remember = false) {
+    public function __construct($db, $username, $password, $remember = false) {
+        $this->db = $db;
         $this->username = $username;
         $this->password = $password;
         $this->remember = $remember;
@@ -48,21 +49,51 @@ class UserAuthenticator {
         return $errors;       
     }
     
-    public function authenticate($users) {
-        if (!array_key_exists($this->username, $users)) {
+    public function authenticate() {
+        $stmt = $this->db->prepare("SELECT * FROM Users WHERE username = :username");
+        $stmt->execute([':username' => $this->username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user) {
             return false;
         }
         
-        return password_verify($this->password, $users[$this->username]['password']);       
+        if (password_verify($this->password, $user['password_hash'])) {
+            return $user;
+        }
+        
+        return false;
     }
    
     public function rememberLogin() {          
         if ($this->remember) {
-            setcookie('remembered_user', $this->username, time() + (30 * 24 * 60 * 60));    
+            $token = bin2hex(random_bytes(32));
+            $expires = time() + (30 * 24 * 60 * 60); 
+            
+            $stmt = $this->db->prepare("UPDATE Users SET remember_token = :token, token_expires = :expires WHERE username = :username");
+            $stmt->execute([
+                ':token' => $token,
+                ':expires' => date('Y-m-d H:i:s', $expires),
+                ':username' => $this->username
+            ]);
+            
+            setcookie('remember_token', $token, $expires, '/');
         }
     }
 }
 
+if (empty($_SESSION['user']) && isset($_COOKIE['remember_token'])) {
+    $stmt = $db->prepare("SELECT * FROM Users WHERE remember_token = :token AND token_expires > NOW()");
+    $stmt->execute([':token' => $_COOKIE['remember_token']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($user) {
+        $_SESSION['user'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
+        header('Location: project.php');
+        exit();
+    }
+}
 
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -70,13 +101,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['rememberMe']);
     
-    $authenticator = new UserAuthenticator($username, $password, $remember);   
+    $authenticator = new UserAuthenticator($db, $username, $password, $remember);   
     $errors = $authenticator->validateInput();
     
     if (empty($errors)) {                      
-        if ($authenticator->authenticate($users)) {               
+        $user = $authenticator->authenticate();
+        if ($user) {               
             $authenticator->rememberLogin();             
-            $_SESSION['user'] = $username;           
+            $_SESSION['user'] = $user['username'];
+            $_SESSION['role'] = $user['role'];
             header('Location: project.php');        
             exit();                           
         } else {
