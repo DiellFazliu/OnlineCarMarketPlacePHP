@@ -1,0 +1,420 @@
+body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #333;
+    }
+
+    header {
+        position: sticky;
+        top: 0;
+        background-color: #333;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+        z-index: 1000;
+    }
+
+    #container-custom {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px auto;
+        max-width: 1200px;
+        margin-top: 80px;
+    }
+
+    .filters-custom {
+        width: 30%;
+        /* Adjust width to 35% */
+        min-width: 250px;
+        background-color: white;
+        margin-left: 10px;
+        border-radius: 10px;
+        padding: 10px;
+        position: fixed;
+        top: 90px;
+        left: 0;
+        max-height: fit-content;
+        z-index: 1000;
+        overflow-y: auto;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .listings-custom {
+        margin-left: 35%;
+        width: 65%;
+        min-width: 500px;
+    }
+
+    .filters-custom h3 {
+        color: #28a745;
+        margin-bottom: 15px;
+    }
+
+    .filters-custom button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .Menu-custom {
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f1f1f1;
+    }
+
+    .Menu-custom::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .Menu-custom::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .Menu-custom::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .Menu-custom::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .btnMenu-custom {
+        width: 100%;
+        padding: 7px;
+        font-size: 13px;
+        font-weight: bold;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #2c2b2b;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .btnMenu-custom:hover {
+        background-color: rgba(141, 224, 32, 0.6);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    .Menu-custom {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .Menu-custom li {
+        margin: 5px 0;
+    }
+
+    .Menu-custom li a {
+        text-decoration: none;
+        color: black;
+        font-size: 14px;
+    }
+
+    .Menu-custom li a:hover {
+        text-decoration: underline;
+    }
+
+    .extra-part-custom {
+        width: 100px;
+        border: 1px solid #aaa5a5;
+        height: 30%;
+        padding: 6px;
+        background-color: rgba(141, 224, 32, 0.6);
+        border-radius: 10px;
+    }
+
+    .guarantee-section {
+        display: block;
+        margin-top: 5px;
+        width: 95%;
+        background-color: white;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .guarantee-item {
+        text-align: center;
+        margin: 5px 0;
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+        display: block;
+    }
+
+    .guarantee-item:last-child {
+        border-bottom: none;
+    }
+
+    .guarantee-item img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .guarantee-item h3 {
+        font-size: 0.9rem;
+        margin: 5px 0;
+        color: #333;
+    }
+
+    .guarantee-item p {
+        font-size: 0.5rem;
+        color: #555;
+    }
+
+    .guarantee-item a {
+        display: block;
+        margin-top: 5px;
+        font-size: 0.5rem;
+        color: #007b55;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .guarantee-item a:hover {
+        text-decoration: underline;
+    }
+
+    .card-custom {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        display: flex;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .card-custom img {
+        width: 200px;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .card-custom .details-custom {
+        flex-grow: 1;
+    }
+
+    .card-custom .details-custom h4 {
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+
+    .card-custom .details-custom .tags-custom {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .card-custom .details-custom .tags-custom span {
+        background-color: #eaf7e9;
+        color: #28a745;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .card-custom .details-custom .price-custom {
+        margin-top: 15px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    .card-custom .details-custom .location-custom,
+    .card-custom .details-custom .monthly-payment-custom {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .card-custom .btn-save-custom {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 15px;
+    }
+
+    .card-custom .btn-save-custom:hover {
+        background-color: #218838;
+    }
+
+    .filter-btn {
+        background-color: white;
+        color: #28a745;
+        border: none;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 80px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+        width: fit-content;
+        margin-bottom: -60px;
+
+    }
+
+    .close-btn-test {
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+
+    }
+
+    .close-btn-test:hover {
+        background-color: grey;
+    }
+
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+
+    @media (min-width: 1025px) {
+        .filter-btn {
+            display: none;
+        }
+
+        .close-btn-test {
+            display: none;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .filter-btn {
+            display: block;
+        }
+
+        .close-btn-test {
+            display: block;
+        }
+
+        .guarantee-section {
+            position: relative;
+            margin-top: 20px;
+            margin-right: 0;
+        }
+
+        .filters-custom {
+            position: absolute;
+            width: 100%;
+            background-color: rgba(141, 224, 32, 0.8);
+            color: white;
+            display: none;
+            padding: 15px;
+            height: fit-content;
+        }
+
+        .filters-custom.active {
+            display: block;
+        }
+
+        .filters-custom button {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 14px;
+        }
+
+        .listings-custom {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .extra-part-custom {
+            width: 100%;
+        }
+
+        .guarantee-section {
+            position: static;
+        }
+
+        .guarantee-section {
+            position: relative;
+            margin-top: 20px;
+            margin-right: 0;
+        }
+    }
+
+
+
+    @media (max-width: 768px) {
+        .filters-custom {
+            width: 100%;
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+
+        .listings-custom {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .card-custom {
+            display: block;
+            text-align: center;
+        }
+
+        .card-custom img {
+            margin: 0 auto;
+            width: 100%;
+            height: auto;
+        }
+
+        .card-custom .details-custom {
+            text-align: left;
+            margin-top: 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .filters-custom {
+            width: 110%;
+            padding: 15px;
+            top: 0;
+        }
+
+        .listings-custom {
+            margin-left: 0;
+            width: 100%;
+            height: auto;
+        }
+
+        .extra-part-custom {
+            width: 100%;
+        }
+    }
