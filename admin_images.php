@@ -3,17 +3,17 @@ header('Content-Type: text/html; charset=utf-8');
 include 'db.php';
 include 'banner.php';
 
-function h($str)
-{
-    return htmlspecialchars($str, ENT_QUOTES);
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete_image') {
     $image_id = intval($_POST['image_id']);
     $stmt = $db->prepare("DELETE FROM CarImages WHERE image_id = ?");
     $stmt->execute([$image_id]);
     header("Location: admin_images.php");
     exit;
+}
+
+function h($str)
+{
+    return htmlspecialchars($str, ENT_QUOTES);
 }
 
 $images = $db->query("SELECT * FROM CarImages ORDER BY image_id DESC")->fetchAll(PDO::FETCH_ASSOC);
@@ -67,10 +67,10 @@ $images = $db->query("SELECT * FROM CarImages ORDER BY image_id DESC")->fetchAll
                         <td><img src="<?= h($img['image_url']) ?>" alt="Car Image" style="max-width: 100px;" /></td>
                         <td><?= $img['is_main'] ? 'Yes' : 'No' ?></td>
                         <td>
+                            <button onclick="openPopup('edit_image.php?image_id=<?= $img['image_id'] ?>', 'Edit Image', 600, 400)" class="btn btn-edit">Edit Image</button>
                             <form method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this image?');">
                                 <input type="hidden" name="action" value="delete_image" />
                                 <input type="hidden" name="image_id" value="<?= $img['image_id'] ?>" />
-                                <button onclick="openPopup('edit_image.php?image_id=<?= $img['image_id'] ?>', 'Edit Image', 600, 400)" class="btn btn-edit">Edit Image</button>
                                 <button type="submit" class="btn btn-delete">Delete</button>
                             </form>
                         </td>

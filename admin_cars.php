@@ -3,17 +3,17 @@ header('Content-Type: text/html; charset=utf-8');
 include 'db.php';
 include 'banner.php';
 
-function h($str)
-{
-  return htmlspecialchars($str, ENT_QUOTES);
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete_car') {
   $car_id = intval($_POST['car_id']);
   $stmt = $db->prepare("DELETE FROM Cars WHERE car_id = ?");
   $stmt->execute([$car_id]);
   header("Location: admin_cars.php");
   exit;
+}
+
+function h($str)
+{
+  return htmlspecialchars($str, ENT_QUOTES);
 }
 
 $stmt = $db->query("
@@ -50,7 +50,7 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <button onclick="goBack()">Back</button>
   <h1>Admin Panel - Cars</h1>
-  <button onclick="openPopup('add_car.php', 'Add Car', 600, 700)" style="margin-left: 10px;" class="btn btn-add" >Add New Car</button>
+  <button onclick="openPopup('add_car.php', 'Add Car', 600, 700)" style="margin-left: 10px;" class="btn btn-add">Add New Car</button>
   <a href="admin_images.php">Go to Manage Images →</a>
 
   <h2>Existing Cars</h2>
@@ -85,10 +85,10 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?= $car['fuel_bonus'] ? 'Yes' : 'No' ?></td>
             <td><?= $car['warranty_included'] ? 'Yes' : 'No' ?></td>
             <td>
+              <button onclick="openPopup('edit_car.php?car_id=<?= $car['car_id'] ?>', 'Edit Car', 600, 700)" class="btn btn-edit">Edit Car</button>
               <form method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this car?');">
                 <input type="hidden" name="action" value="delete_car" />
                 <input type="hidden" name="car_id" value="<?= $car['car_id'] ?>" />
-                <button onclick="openPopup('edit_car.php?car_id=<?= $car['car_id'] ?>', 'Edit Car', 600, 700)" class="btn btn-edit">Edit Car</button>
                 <button type="submit" class="btn btn-delete">Delete</button>
               </form>
             </td>

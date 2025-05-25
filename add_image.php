@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 $stmt = $db->prepare("INSERT INTO CarImages (car_id, image_url, is_main) VALUES (?, ?, ?)");
-                $stmt->execute([$car_id, $image_url, $is_main]);
+                $stmt->execute([$car_id, $image_url, $is_main ? 'TRUE' : 'FALSE']);
 
                 echo "<script>window.opener.location.reload(); window.close();</script>";
                 exit;

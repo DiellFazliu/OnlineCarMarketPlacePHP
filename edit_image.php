@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([
         $_POST['car_id'],
         $new_image_url,
-        $is_main,
+        $is_main ? 'TRUE' : 'FALSE',
         $image_id
     ]);
 
