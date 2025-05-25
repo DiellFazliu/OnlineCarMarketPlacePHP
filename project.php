@@ -270,26 +270,6 @@ if ($isLoggedIn) {
             <p id="slg0">Drive Your Dream</p>
             <p id="slg">Only a Click Away!</p>
         </div>
-        <div id="section-3">
-            <div class="right">
-                <div class="horizontale">
-                    <div>
-                        <button class="btnMenu" id="brandButton">Brand &nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#9660;</button>
-                        <ul style="list-style: none; padding: 0; margin: 0; display: none; max-height: 100px; overflow-y: scroll; border: 1px solid #ddd;" class="Menu" id="brandMenu">
-                            <?php foreach ($brands as $brand): ?>
-                                <li><a href="#" data-brand="<?php echo $brand; ?>"><?php echo $brand; ?></a></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                    <div>
-                        <button class="btnMenu" id="modelButton">Model&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#9660;</button>
-                        <ul style="list-style: none; padding: 0; margin: 0; display: none; max-height: 150px; overflow-y: scroll; border: 1px solid #ddd;" class="Menu" id="modelMenu">
-                        </ul>
-                    </div>
-                </div>
-                <input id="extrapart" class="extra-part" type="submit" value="Search" style="height: 32px; width: 170px; border:rgba(141,224,32,1); background: <?php echo PRIMARY_COLOR; ?>;color:white">
-            </div>
-        </div>
     </div>
 
     <div id="favorites-modal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); width: 80%; background: white; border: 1px solid #ddd; padding: 20px; border-radius: 5px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); z-index: 1000;">
