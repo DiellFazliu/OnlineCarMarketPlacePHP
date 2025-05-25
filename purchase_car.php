@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user'])) {
     die("Duhet të jeni i kyçur për të bërë një blerje.");
 }
 
@@ -14,16 +14,13 @@ if (!isset($_POST['car_id']) || !is_numeric($_POST['car_id'])) {
 
 $car_id = intval($_POST['car_id']);
 
-$stmt = $conn->prepare("SELECT make, model, variant, base_price, customs_fee, registration_fee, delivery_fee, service_fee FROM Cars WHERE car_id = ?");
-$stmt->bind_param("i", $car_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$stmt = $db->prepare("SELECT make, model, variant, base_price, customs_fee, registration_fee, delivery_fee, service_fee FROM Cars WHERE car_id = ?");
+$stmt->execute([$car_id]);
+$row = $stmt->fetch();
 
-if ($result->num_rows === 0) {
+if (!$row) {
     die("Makina nuk u gjet.");
 }
-
-$row = $result->fetch_assoc();
 
 $make = $row['make'];
 $model = $row['model'];
@@ -36,15 +33,13 @@ $service_fee = $row['service_fee'];
 
 $total_price = $base_price + $customs_fee + $registration_fee + $delivery_fee + $service_fee;
 
-$stmt = $conn->prepare("INSERT INTO Purchases (user_id, car_id, price_at_purchase) VALUES (?, ?, ?)");
-$stmt->bind_param("iid", $user_id, $car_id, $total_price);
+$stmt = $db->prepare("INSERT INTO Purchases (user_id, car_id, price_at_purchase) VALUES (?, ?, ?)");
+$success = $stmt->execute([$user_id, $car_id, $total_price]);
 
-if ($stmt->execute()) {
-    $user_stmt = $conn->prepare("SELECT email FROM Users WHERE user_id = ?");
-    $user_stmt->bind_param("i", $user_id);
-    $user_stmt->execute();
-    $user_result = $user_stmt->get_result();
-    $user_data = $user_result->fetch_assoc();
+if ($success) {
+    $user_stmt = $db->prepare("SELECT email FROM Users WHERE user_id = ?");
+    $user_stmt->execute([$user_id]);
+    $user_data = $user_stmt->fetch();
 
     if ($user_data) {
         $to = $user_data['email'];

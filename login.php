@@ -77,7 +77,7 @@ class UserAuthenticator {
                 ':username' => $this->username
             ]);
             
-            setcookie('remember_token', $token, $expires, '/');
+            setcookie('remember_token', $token, $expires, '/',true , true);
         }
     }
 }
@@ -89,6 +89,7 @@ if (empty($_SESSION['user']) && isset($_COOKIE['remember_token'])) {
     
     if ($user) {
         $_SESSION['user'] = $user['username'];
+        $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['role'] = $user['role'];
         header('Location: project.php');
         exit();
@@ -109,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user) {               
             $authenticator->rememberLogin();             
             $_SESSION['user'] = $user['username'];
+            $_SESSION['user_id'] = $user['user_id'];         
             $_SESSION['role'] = $user['role'];
             header('Location: project.php');        
             exit();                           

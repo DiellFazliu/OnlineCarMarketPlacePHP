@@ -11,7 +11,7 @@
 <body>
     <div id="Banner"></div>
     <script>
-        fetch('banner.html')
+        fetch('banner.php')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('Banner').innerHTML = data;

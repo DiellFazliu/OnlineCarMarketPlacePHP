@@ -1,5 +1,12 @@
 <?php
+session_start();
+
 require 'db.php';
+
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit();
+}
 
 $carId = $_GET['car_id'] ?? 1;
 
@@ -45,7 +52,7 @@ $car['total_price'] = number_format(
 <body>
     <div id="Banner"></div>
     <script>
-        fetch('banner.html')
+        fetch('banner.php')
             .then(res => res.text())
             .then(data => document.getElementById('Banner').innerHTML = data);
         document.addEventListener('DOMContentLoaded', () => {
@@ -192,7 +199,9 @@ $car['total_price'] = number_format(
             .then(data => document.getElementById('Footer').innerHTML = data);
 
         function redirect() {
-            fetch('check_login.php')
+            fetch('check_login.php', {
+                    credentials: 'same-origin'
+                })
                 .then(res => res.json())
                 .then(data => {
                     if (data.logged_in) {
