@@ -4,11 +4,11 @@ require 'db.php';
 $carId = $_GET['car_id'] ?? 1;
 
 $sql = "SELECT *, CONCAT(make, ' ', model, ' ', variant) AS title FROM cars WHERE car_id = ?";
-$stmt = $pdo->prepare($sql);
+$stmt = $db->prepare($sql);
 $stmt->execute([$carId]);
 $car = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$imageStmt = $pdo->prepare("SELECT image_url FROM CarImages WHERE car_id = ? ORDER BY is_main DESC, image_id ASC");
+$imageStmt = $db->prepare("SELECT image_url FROM CarImages WHERE car_id = ? ORDER BY is_main DESC, image_id ASC");
 $imageStmt->execute([$carId]);
 $images = $imageStmt->fetchAll(PDO::FETCH_COLUMN);
 

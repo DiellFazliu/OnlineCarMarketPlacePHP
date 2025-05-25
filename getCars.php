@@ -4,7 +4,7 @@ require 'db.php';
 header('Content-Type: application/json');
 
 try {
-    $stmt = $pdo->query("
+    $stmt = $db->query("
         SELECT Cars.*, 
                (SELECT image_url FROM CarImages WHERE CarImages.car_id = Cars.car_id AND is_main = TRUE LIMIT 1) AS main_image 
         FROM Cars

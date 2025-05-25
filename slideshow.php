@@ -4,7 +4,7 @@ require 'db.php';
 $carId = $_GET['car_id'] ?? 1;
 $startSlide = (int) ($_GET['slide'] ?? 1);
 
-$imageStmt = $pdo->prepare("SELECT image_url FROM CarImages WHERE car_id = ? ORDER BY is_main DESC, image_id ASC");
+$imageStmt = $db->prepare("SELECT image_url FROM CarImages WHERE car_id = ? ORDER BY is_main DESC, image_id ASC");
 $imageStmt->execute([$carId]);
 $images = $imageStmt->fetchAll(PDO::FETCH_COLUMN);
 
