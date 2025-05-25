@@ -6,6 +6,7 @@ $isAdmin = $isLoggedIn && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +18,7 @@ $isAdmin = $isLoggedIn && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
         #menu-icon {
             display: none;
         }
-        
+
         @media (max-width: 768px) {
             #menu-icon {
                 display: block;
@@ -27,7 +28,7 @@ $isAdmin = $isLoggedIn && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
                 z-index: 1001;
                 cursor: pointer;
             }
-            
+
             .navbar ul {
                 flex-direction: column;
                 align-items: center;
@@ -35,6 +36,7 @@ $isAdmin = $isLoggedIn && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
         }
     </style>
 </head>
+
 <body>
     <div id="menu-icon">
         <i class="fa-solid fa-bars" style="color: #8de020;"></i>
@@ -86,8 +88,17 @@ $isAdmin = $isLoggedIn && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
                 <li><a href="howitworks.php" class="line">How it works</a></li>
                 <li><a href="reviews.php" class="line">Reviews</a></li>
                 <?php if ($isAdmin): ?>
-                    <li><a href="admin-panel.php" class="line">Admin Panel</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Admin <i class="fa fa-caret-down"></i></a>
+                        <ul class="dropdown-content">
+                            <li><a href="admin-panel.php" class="line">Admin Panel</a></li>
+                            <li><a href="admin_cars.php" class="line">Edit Cars</a></li>
+                            <li><a href="admin_image.php" class="line">Edit Images</a></li>
+                            <li><a target="_blank" href="shiko_blerjet.php" class="line">Shiko Blerjet</a></li>
+                        </ul>
+                    </li>
                 <?php endif; ?>
+
                 <li><a href="#" class="favorite trigger-favorites"><i class="fa-regular fa-heart" id="icon-regular"></i>
                         <i class="fa-solid fa-heart" id="icon-solid"></i></a></li>
 
@@ -130,4 +141,5 @@ $isAdmin = $isLoggedIn && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
         });
     </script>
 </body>
+
 </html>
