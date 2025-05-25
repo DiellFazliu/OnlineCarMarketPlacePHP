@@ -51,13 +51,73 @@
                         </ul>
                     </div>
                 </div>
-                <input id="extrapart-custom" class="extra-part-custom" type="submit" value="23049 total results"
-                    style="height: 32px; width: 170px; border:#8de020">
+                <input id="extrapart-custom" class="extra-part-custom" type="button" value="Search"
+                    style="height: 32px; width: 170px; border:#8de020;">
 
                 <script>
                     $(document).ready(function() {
+                        $('#brandButton-custom').click(function() {
+                            $('#brandMenu-custom').slideToggle(300);
+                        });
+
+                        $('#modelButton-custom').click(function() {
+                            $('#modelMenu-custom').slideToggle(300);
+                        });
+
+                        $.ajax({
+                            url: 'getBrands.php',
+                            method: 'GET',
+                            success: function(brands) {
+                                if (Array.isArray(brands) && brands.length) {
+                                    const brandItems = brands.map(brand => `<li><a href="#" data-brand="${brand}">${brand}</a></li>`).join('');
+                                    $('#brandMenu-custom').html(brandItems);
+                                } else {
+                                    $('#brandMenu-custom').html('<li><em>No brands found</em></li>');
+                                }
+                            },
+                            error: function() {
+                                $('#brandMenu-custom').html('<li><em>Error loading brands</em></li>');
+                            }
+                        });
+
                         let selectedBrand = "";
                         let selectedModel = "";
+
+                        $('#brandMenu-custom').on('click', 'a', function(e) {
+                            e.preventDefault();
+                            selectedBrand = $(this).data('brand');
+                            $('#brandButton-custom').text(selectedBrand);
+                            $('#brandMenu-custom').slideUp(500);
+
+                            selectedModel = "";
+                            $('#modelButton-custom').text('Model');
+
+                            $.ajax({
+                                url: 'getModels.php',
+                                method: 'GET',
+                                data: {
+                                    brand: selectedBrand
+                                },
+                                success: function(models) {
+                                    if (Array.isArray(models) && models.length) {
+                                        const modelItems = models.map(model => `<li><a href="#">${model}</a></li>`).join('');
+                                        $('#modelMenu-custom').html(modelItems).show();
+                                    } else {
+                                        $('#modelMenu-custom').html('<li><em>No models found</em></li>').show();
+                                    }
+                                },
+                                error: function() {
+                                    $('#modelMenu-custom').html('<li><em>Error loading models</em></li>').show();
+                                }
+                            });
+                        });
+
+                        $('#modelMenu-custom').on('click', 'a', function(e) {
+                            e.preventDefault();
+                            selectedModel = $(this).text();
+                            $('#modelButton-custom').text(selectedModel);
+                            $('#modelMenu-custom').slideUp(500);
+                        });
 
                         $(".filter-btn").click(function() {
                             $(".filters-custom").toggleClass("active");
@@ -67,94 +127,60 @@
                             $(".filters-custom").removeClass("active");
                         });
 
-                        const models = {
-                            Mercedes: ["C Class", "E Class", "S Class", "G Class"],
-                            Audi: ["A3", "A6", "A7", "A8"],
-                            BMW: ["Series 3", "Series 4", "Series 7", "Series 8"],
-                            Porsche: ["Taycan", "991", "992"],
-                            "Rolls Royce": ["Phantom", "Dawn", "Wraith", "Ghost"]
-                        };
-
-                        const combinations = {
-                            "mercedes": "Mercedes.php",
-                            "mercedes-c-class": "mercedesC.php",
-                            "mercedes-e-class": "mercedesE.php",
-                            "mercedes-s-class": "mercedesS.php",
-                            "mercedes-g-class": "mercedesG.php",
-                            "bmw": "BMW.php",
-                            "bmw-series-3": "bmwm3.php",
-                            "bmw-series-4": "bmwm4.php",
-                            "bmw-series-7": "bmw7.php",
-                            "bmw-series-8": "bmw8.php",
-                            "audi": "Audi.php",
-                            "audi-a3": "audia3.php",
-                            "audi-a6": "audia6.php",
-                            "audi-a7": "audia7.php",
-                            "audi-a8": "audia8.php",
-                            "porsche": "Porsche.php",
-                            "porsche-911": "porsche911.php",
-                            "porsche-taycan": "porschetaycan.php",
-                            "rollsroyce": "RollsRoyce.php",
-                            "rollsroyce-dawn": "rollsroycedawn.php",
-                            "rollsroyce-ghost": "rollsroyceghost.php",
-                            "rollsroyce-phantom": "rollsroycephantom.php",
-                            "rollsroyce-wraith": "rollsroycewraith.php"
-                        };
-
-                        $("#brandMenu-custom a").click(function(e) {
+                        $('#extrapart-custom').click(function(e) {
                             e.preventDefault();
-                            selectedBrand = $(this).data("brand");
-                            $("#brandButton-custom").text(selectedBrand);
-                            $("#brandMenu-custom").slideUp(500);
 
-                            const modelList = models[selectedBrand] || [];
-                            const modelItems = modelList.map(model => `<li><a href="#">${model}</a></li>`).join("");
-                            $("#modelMenu-custom").html(modelItems);
-                            $("#modelButton-custom").text("Model");
+                            const query = new URLSearchParams({
+                                brand: selectedBrand,
+                                model: selectedModel
+                            });
 
-                            $("#extrapart-custom").val("Search " + selectedBrand);
-                        });
+                            const hasFilters = selectedBrand || selectedModel;
+                            const url = hasFilters ? 'searchCars.php?' + query.toString() : 'getCars.php';
 
-                        $("#modelMenu-custom").on("click", "a", function(e) {
-                            e.preventDefault();
-                            selectedModel = $(this).text();
-                            $("#modelButton-custom").text(selectedModel);
-                            $("#modelMenu-custom").slideUp(500);
+                            fetch(url)
+                                .then(response => response.json())
+                                .then(cars => {
+                                    const listings = document.getElementById('listings');
+                                    if (!Array.isArray(cars)) {
+                                        listings.innerHTML = "<p>Error loading cars.</p>";
+                                        return;
+                                    }
 
-
-                            $("#extrapart-custom").val("Search " + selectedBrand + " " + selectedModel);
-                        });
-
-
-                        $("#extrapart-custom").click(function() {
-                            if (selectedBrand) {
-
-                                let key = selectedBrand.toLowerCase().replace(/\s+/g, '-');
-
-
-                                if (selectedModel) {
-                                    key += '-' + selectedModel.toLowerCase().replace(/\s+/g, '-');
-                                }
-
-
-                                if (combinations[key]) {
-                                    window.location.href = combinations[key];
-                                } else {
-                                    alert("No page found for this combination. Please select a valid brand and model.");
-                                }
-                            } else {
-                                alert("Please select a brand.");
-                            }
-                        });
-
-
-                        $(".btnMenu-custom").click(function() {
-                            const menuId = $(this).attr("id").replace("Button-custom", "Menu-custom");
-                            $(".Menu-custom").not(`#${menuId}`).slideUp(500);
-                            $(`#${menuId}`).stop(true, true).slideToggle(500);
+                                    listings.innerHTML = cars.map(car => `
+                    <a href="preview.php?car_id=${car.car_id}" class="card-link">
+                        <div class="card-custom">
+                            <img src="${car.main_image || 'login.png'}" alt="${car.make} ${car.model}">
+                            <div class="details-custom">
+                                <h4>${car.make} ${car.model} ${car.variant || ''}</h4>
+                                <p>${Number(car.mileage_km).toLocaleString()} km | ${car.month_registered.toString().padStart(2, '0')}/${car.year} | ${car.horsepower} hp | ${car.transmission} | ${car.fuel_type}</p>
+                                <div class="tags-custom">
+                                    ${car.fuel_bonus ? '<span>Fuel Bonus</span>' : ''}
+                                    ${car.warranty_included ? '<span>Warranty Included</span>' : ''}
+                                    <span>+ more</span>
+                                </div>
+                                <p class="location-custom">${car.location} | Transport: ${(Number(car.delivery_fee) || 0).toFixed(0)}€</p>
+                                <p class="monthly-payment-custom">Monthly payment: ${(Number(car.monthly_financing)).toFixed(0)}€</p>
+                                <p class="price-custom">${(
+                                    parseFloat(car.base_price) +
+                                    parseFloat(car.customs_fee) +
+                                    parseFloat(car.registration_fee) +
+                                    parseFloat(car.service_fee) +
+                                    parseFloat(car.delivery_fee)
+                                ).toLocaleString()}€</p>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    document.getElementById('listings').innerHTML = "<p>Failed to load listings.</p>";
+                                });
                         });
                     });
                 </script>
+
             </div>
             <div class="guarantee-section">
                 <div class="guarantee-item">
@@ -171,7 +197,7 @@
                     <img src="car-logos/shield.png" alt="Icon">
                     <h3>6 muaj garancion</h3>
                     <p>Ofrojmë çdo veturë me garancion.</p>
-                    <a href="#">Më shumë rreth garancive &rarr;</a>
+                    <a href="howitworks.php">Më shumë rreth garancive &rarr;</a>
                 </div>
             </div>
         </div>
