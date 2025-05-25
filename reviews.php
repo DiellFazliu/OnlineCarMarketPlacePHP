@@ -15,7 +15,7 @@ $multiArray = [
 sort($numericArray);
 arsort($assocArray);
 
-$comment = "Great car!";
+$comment = "Great car!!";
 $commentLength = strlen($comment);
 
 function averageRating($array) {
