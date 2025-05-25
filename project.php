@@ -260,84 +260,10 @@ if ($isLoggedIn) {
     usort($car_objects, function ($a, $b) {
         return $a->getPrice() <=> $b->getPrice();
     });
+    include 'banner.php';
+
     ?>
-
-    <div id="menu-icon">
-        <i class="fa-solid fa-bars" style="color: <?php echo PRIMARY_COLOR; ?>;"></i>
-    </div>
-    <div id="overlay1">
-        <div id="menu">
-            <ul style="text-align: center;">
-                <li><a href="project.php"><img src="logo.png" class="logo"></a></li>
-                <li class="name"><?php echo SITE_NAME; ?></li>
-                <li><a href="project.php" class="line">Home</a></li>
-                <li><a href="cars.php" class="line">Our Cars</a></li>
-                <li><a href="about-us.php" class="line">About Us</a></li>
-                <li><a href="howitworks.php" class="line">How it works</a></li>
-                <li><a href="reviews.php" class="line">Reviews</a></li>
-                <li class="dropdown">
-                    <div>
-                        <ul>
-                            <li class="login-text trigger-favorites"><a href="#"><i class="fa-regular fa-heart"></i>Favorite cars</a></li>
-                            <?php if ($isLoggedIn): ?>
-                                <input id="button" type="submit" value="Logout" onclick="window.location.href='logout.php';">
-                            <?php else: ?>
-                                <input id="button" type="submit" value="Login" onclick="window.location.href='login.php';">
-                            <?php endif; ?>
-                            <li>
-                                <div class="sign-up">
-                                    <?php if (!$isLoggedIn): ?>
-                                        <a>Don't have an account?</a> <a href="register.php" class="sign" style="color: <?php echo PRIMARY_COLOR; ?>;text-decoration: none; font-weight: 500;"> <br> Sign up</a>
-                                    <?php endif; ?>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="section-1">
-        <nav class="navbar">
-            <ul>
-                <li><a href="project.php"><img src="logo.png" class="logo"></a></li>
-                <li class="name"><?php echo SITE_NAME; ?></li>
-                <li><a href="project.php" class="line <?php echo ($current_page == 'project.php') ? 'active' : ''; ?>">Home</a></li>
-                <li><a href="cars.php" class="line <?php echo ($current_page == 'cars.php') ? 'active' : ''; ?>">Our Cars</a></li>
-                <li><a href="about-us.php" class="line <?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a></li>
-                <li><a href="howitworks.php" class="line <?php echo ($current_page == 'howitworks.php') ? 'active' : ''; ?>">How it works</a></li>
-                <li><a href="reviews.php" class="line <?php echo ($current_page == 'reviews.php') ? 'active' : ''; ?>">Reviews</a></li>
-                <li><a href="#" class="favorite trigger-favorites"><i class="fa-regular fa-heart" id="icon-regular"></i>
-                        <i class="fa-solid fa-heart" id="icon-solid"></i></a></li>
-
-                <li class="dropdown">
-                    <div>
-                        <?php if ($isLoggedIn): ?>
-                            <a href="#" class="dropbtn"><i class="fa-regular fa-user"></i><?php echo htmlspecialchars($_SESSION['user']); ?></a>
-                        <?php else: ?>
-                            <a href="#" class="dropbtn"><i class="fa-regular fa-user"></i>Login</a>
-                        <?php endif; ?>
-                        <ul class="dropdown-content">
-                            <li class="login-text trigger-favorites"><a href="#"><i class="fa-regular fa-heart"></i>Favorite cars</a></li>
-                            <?php if ($isLoggedIn): ?>
-                                <input id="button" type="submit" value="Logout" onclick="window.location.href='logout.php';">
-                            <?php else: ?>
-                                <input id="button" type="submit" value="Login" onclick="window.location.href='login.php';">
-                            <?php endif; ?>
-                            <li>
-                                <div class="sign-up">
-                                    <?php if (!$isLoggedIn): ?>
-                                        <a>Don't have an account?</a> <a href="register.php" class="sign" style="color: <?php echo PRIMARY_COLOR; ?>;text-decoration: none; font-weight: 500;"> <br> Sign up</a>
-                                    <?php endif; ?>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    
 
     <div id="section-2">
         <div id="sllogani">

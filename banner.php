@@ -288,7 +288,6 @@ echo "Roli: " . $_SESSION['role'];
                             <li><a href="edit-reviews.php">Edit Reviews</a></li>
                             <li><a href="edit-purchases.php">Edit Purchases</a></li>
                             <li><a href="admin-project.php">Project Settings</a></li>
-                            <li><a href="shiko_blerjet.php">Shiko blerjet</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>
