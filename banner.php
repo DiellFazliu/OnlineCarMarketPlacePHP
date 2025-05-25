@@ -93,7 +93,7 @@ $isAdmin = $isLoggedIn && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
                         <ul class="dropdown-content">
                             <li><a href="admin-panel.php" class="line">Admin Panel</a></li>
                             <li><a href="admin_cars.php" class="line">Edit Cars</a></li>
-                            <li><a href="admin_image.php" class="line">Edit Images</a></li>
+                            <li><a href="admin_images.php" class="line">Edit Images</a></li>
                             <li><a target="_blank" href="shiko_blerjet.php" class="line">Shiko Blerjet</a></li>
                         </ul>
                     </li>

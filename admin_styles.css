@@ -1,142 +1,179 @@
 body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 20px;
-            background-color: #f5f7fa;
-            color: #333;
-        }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
 
-        h1,
-        h2 {
-            color: #222;
-            margin-bottom: 15px;
-        }
+h1 {
+    color: #222;
+    text-align: center;
+    margin: 30px 0;
+    margin-top: 50px;
+}
+h2{
+    margin-left: 10px;
+}
 
-        button {
-            background-color: #007bff;
-            border: none;
-            color: white;
-            padding: 8px 14px;
-            margin: 5px 0;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-        }
+.admin-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
 
-        button:hover {
-            background-color: #0056b3;
-        }
+.message {
+    padding: 12px;
+    margin-bottom: 25px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
 
-        button:active {
-            background-color: #004080;
-        }
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
 
-        .button-group {
-            margin-bottom: 25px;
-        }
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
 
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 40px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-            background-color: white;
-            border-radius: 6px;
-            overflow: hidden;
-        }
+.table-wrapper {
+    overflow-x: auto;
+}
 
-        thead {
-            background-color: #007bff;
-            color: white;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    background-color: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    min-width: 800px;
+    margin-left: 5px;
+}
 
-        th,
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-            vertical-align: middle;
-        }
+thead {
+    background-color: #28a745;
+    color: #fff;
+}
 
-        tbody tr:hover {
-            background-color: #f1f7ff;
-        }
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
 
-        img {
-            max-width: 120px;
-            max-height: 80px;
-            border-radius: 4px;
-            object-fit: cover;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
+tbody tr:hover {
+    background-color: #e9f7ef;
+}
 
-        td form {
-            display: inline-block;
-            margin: 0 3px;
-        }
+img {
+    max-width: 100px;
+    border-radius: 4px;
+}
 
-        td form button {
-            padding: 6px 10px;
-            font-size: 0.85rem;
-        }
+.btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+}
 
-        form button[type="submit"] {
-            background-color: #dc3545;
-        }
+.btn-add {
+    background-color: #28a745;
+    margin-bottom: 20px;
+}
 
-        form button[type="submit"]:hover {
-            background-color: #a71d2a;
-        }
+.btn-add:hover {
+    background-color: #218838;
+}
 
-        @media (max-width: 900px) {
+.btn-edit {
+    background-color: #17a2b8;
+}
 
-            table,
-            thead,
-            tbody,
-            th,
-            td,
-            tr {
-                display: block;
-            }
+.btn-edit:hover {
+    background-color: #138496;
+}
 
-            thead tr {
-                display: none;
-            }
+.btn-delete {
+    background-color: #dc3545;
+}
 
-            tbody tr {
-                margin-bottom: 20px;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                padding: 10px;
-                background-color: #fff;
-            }
+.btn-delete:hover {
+    background-color: #a71d2a;
+}
 
-            tbody td {
-                padding: 10px;
-                text-align: right;
-                position: relative;
-                border: none;
-                border-bottom: 1px solid #eee;
-            }
+button {
+    margin: 2px 0;
+}
 
-            tbody td:last-child {
-                border-bottom: 0;
-            }
+.form-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
 
-            tbody td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 15px;
-                top: 10px;
-                font-weight: 600;
-                text-transform: uppercase;
-                font-size: 0.75rem;
-                color: #555;
-                text-align: left;
-            }
+.form-group {
+    margin-bottom: 15px;
+}
 
-            img {
-                max-width: 100%;
-                height: auto;
-            }
-        }
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #444;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.form-actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 700px;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+a {
+    color: #18ee43;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
