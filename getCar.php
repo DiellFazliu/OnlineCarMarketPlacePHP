@@ -1,5 +1,4 @@
 <?php
-// getCar.php
 require 'db.php';
 
 $carId = $_GET['id'] ?? 1;

@@ -1,27 +1,30 @@
 <?php
-if (!isset($user_email) || !filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
-    die("Email i përdoruesit nuk është i vlefshëm.");
-}
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-if (!isset($make, $model, $variant, $total_price)) {
-    die("Të dhënat e makinës ose çmimi mungojnë.");
-}
+require 'vendor/autoload.php';
 
-$to = $user_email;
-$subject = "Konfirmim Blerje - CarMarketplace";
+$mail = new PHPMailer(true);
 
-$message = "Përshëndetje,\n\n";
-$message .= "Ju sapo keni blerë makinën: $make $model $variant\n";
-$message .= "Çmimi total i blerjes: €" . number_format($total_price, 2) . "\n\n";
-$message .= "Faleminderit që zgjodhët Autosfera.\n";
-$message .= "Ju urojmë udhëtime të mbarë!";
+try {
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'albin.maqastena@student.uni-pr.edu';
+    $mail->Password   = 'sbxw xzvu bwvc pvvt';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = 587;
 
-$headers = "From: Autosfera <support@carapp.com>\r\n";
-$headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+    $mail->setFrom('autosfera@gmail.com', 'Autosfera');
+    $mail->addAddress($user_email);
 
-if (mail($to, $subject, $message, $headers)) {
-    echo "Email i konfirmimit është dërguar në $to.";
-} else {
-    echo "Gabim: Email-i nuk u dërgua.";
+    $mail->isHTML(false);
+    $mail->Subject = 'Konfirmim Blerje - CarMarketplace';
+    $mail->Body    = "Përshëndetje,\n\nJu sapo keni blerë makinën: $make $model $variant\nÇmimi total: €" . number_format($total_price, 2) . "\n\nFaleminderit që zgjodhët Autosfera.\nJu urojmë udhëtime të mbarë!";
+
+    $mail->send();
+    echo 'Email i konfirmimit u dërgua me sukses.';
+} catch (Exception $e) {
+    echo "Gabim në dërgimin e email-it: {$mail->ErrorInfo}";
 }
 ?>
