@@ -37,7 +37,7 @@ if (!$car) {
     exit;
 }
 
-$user_email = $_SESSION['user']['email'];
+$user_email = $_SESSION['email'];
 $make = $car['make'];
 $model = $car['model'];
 $variant = $car['variant'];

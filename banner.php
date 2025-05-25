@@ -282,7 +282,7 @@ echo "Roli: " . $_SESSION['role'];
                     <li class="dropdown admin-dropdown" id="admin-panel">
                         <a href="#" class="dropbtn"><i class="fa-solid fa-user-shield"></i> Admin Panel</a>
                         <ul class="dropdown-content">
-                            <li><a href="edit-users.php">Edit Users</a></li>
+                            <li><a href="admin-panel.php">Edit Users</a></li>
                             <li><a href="admin_cars.php">Edit Cars</a></li>
                             <li><a href="admin_images.php">Edit Images</a></li>
                             <li><a href="edit-reviews.php">Edit Reviews</a></li>

@@ -95,10 +95,7 @@ if (empty($_SESSION['user']) && isset($_COOKIE['remember_token'])) {
     if ($user) {
         $_SESSION['user'] = $user['username'];
         $_SESSION['user_id'] = $user['user_id'];
-        $_SESSION['username'] = [
-            'email' => $user['email'],
-            'name' => $user['name']
-        ];
+        $_SESSION['email'] = $user['email'];
         $_SESSION['role'] = $user['role'];
         header('Location: project.php');
         exit();
@@ -120,10 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $authenticator->rememberLogin();
             $_SESSION['user'] = $user['username'];
             $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['user'] = [
-                'email' => $user['email'],
-                'name' => $user['name']
-            ];
+            $_SESSION['email'] = $user['email'];
             $_SESSION['role'] = $user['role'];
             header('Location: project.php');
             exit();
