@@ -1,3 +1,123 @@
+<?php
+session_start();
+require_once 'db.php';
+
+$isLoggedIn = isset($_SESSION['user_id']);
+$isAdmin = $isLoggedIn && isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+
+function getDealsOfWeek($db) {
+    $deals = [];
+    $query = "SELECT c.*, ci.image_url FROM cars c 
+              LEFT JOIN carimages ci ON c.car_id = ci.car_id AND ci.is_main = true
+              WHERE c.is_deal_of_week = true";
+    $result = $db->query($query);
+    
+    if ($result) {
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $deals[] = $row;
+        }
+    }
+    return $deals;
+}
+
+function getAllCars($db) {
+    $cars = [];
+    $query = "SELECT c.*, ci.image_url FROM cars c 
+              LEFT JOIN carimages ci ON c.car_id = ci.car_id AND ci.is_main = true";
+    $result = $db->query($query);
+    
+    if ($result) {
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $cars[] = $row;
+        }
+    }
+    return $cars;
+}
+
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['action'])) {
+        $carId = $_POST['car_id'];
+        
+        if ($_POST['action'] === 'add_deal') {
+            $discount = $_POST['discount'];
+            $stmt = $db->prepare("UPDATE cars SET is_deal_of_week = true, discount = ? WHERE car_id = ?");
+            $stmt->execute([$discount, $carId]);
+        } elseif ($_POST['action'] === 'remove_deal') {
+            $stmt = $db->prepare("UPDATE cars SET is_deal_of_week = false, discount = 0 WHERE car_id = ?");
+            $stmt->execute([$carId]);
+        }
+        
+        header("Location: project.php");
+        exit();
+    }
+}
+
+if ($isLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['favorite_action'])) {
+        $carId = $_POST['car_id'];
+        $userId = $_SESSION['user_id'];
+        
+        if ($_POST['favorite_action'] === 'add') {
+            $checkStmt = $db->prepare("SELECT * FROM favorite_cars WHERE user_id = ? AND car_id = ?");
+            $checkStmt->execute([$userId, $carId]);
+            
+            if ($checkStmt->rowCount() == 0) {
+                $insertStmt = $db->prepare("INSERT INTO favorite_cars (user_id, car_id) VALUES (?, ?)");
+                $insertStmt->execute([$userId, $carId]);
+            }
+        } elseif ($_POST['favorite_action'] === 'remove') {
+            $deleteStmt = $db->prepare("DELETE FROM favorite_cars WHERE user_id = ? AND car_id = ?");
+            $deleteStmt->execute([$userId, $carId]);
+        }
+        
+        if (isset($_POST['ajax'])) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true]);
+            exit();
+        }
+    }
+}
+
+$userFavorites = [];
+if ($isLoggedIn) {
+    $userId = $_SESSION['user_id'];
+    $stmt = $db->prepare("SELECT car_id FROM favorite_cars WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $userFavorites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+}
+
+$car_deals = getDealsOfWeek($db);
+$all_cars = $isAdmin ? getAllCars($db) : [];
+
+function getUserFavoritesWithDetails($db, $userId) {
+    $favorites = [];
+    $query = "SELECT c.*, ci.image_url 
+              FROM favorite_cars fc
+              JOIN cars c ON fc.car_id = c.car_id
+              LEFT JOIN carimages ci ON c.car_id = ci.car_id AND ci.is_main = true
+              WHERE fc.user_id = ?";
+    $stmt = $db->prepare($query);
+    $stmt->execute([$userId]);
+    
+    if ($stmt) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $favorites[] = $row;
+        }
+    }
+    return $favorites;
+}
+
+$userFavorites = [];
+$userFavoriteDetails = [];
+if ($isLoggedIn) {
+    $userId = $_SESSION['user_id'];
+    $stmt = $db->prepare("SELECT car_id FROM favorite_cars WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $userFavorites = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    $userFavoriteDetails = getUserFavoritesWithDetails($db, $userId);
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -13,6 +133,35 @@
         #favorites-container {
             max-height: 400px;
             overflow-y: auto;
+        }
+        .admin-controls {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .deal-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .deal-form select, .deal-form input {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #777;
+        }
+        .discounted-price {
+            color: red;
+            font-weight: bold;
+        }
+        .discount-badge {
+            color: red;
+            font-size: 0.9em;
         }
     </style>
 </head>
@@ -32,101 +181,27 @@
         'RollsRoyce' => ['Dawn', 'Ghost', 'Phantom', 'Wraith']
     ];
 
-    $car_deals = [
-        [
-            'brand' => 'Mercedes',
-            'model' => 'E Class',
-            'price' => 65000,
-            'year' => 2022,
-            'image' => 'Mercedes-Benz/E-class/normal/e1.jfif',
-            'discount' => 10
-        ],
-        [
-            'brand' => 'BMW',
-            'model' => 'Series 7',
-            'price' => 72000,
-            'year' => 2023,
-            'image' => 'BMW/M7/2024/b.jpg',
-            'discount' => 8
-        ],
-        [
-            'brand' => 'Audi',
-            'model' => 'A6',
-            'price' => 58000,
-            'year' => 2021,
-            'image' => 'Audi/A6/normal/a2.jfif',
-            'discount' => 12
-        ],
-        [
-            'brand' => 'Porsche',
-            'model' => '911',
-            'price' => 115000,
-            'year' => 2023,
-            'image' => 'Porsche/911/991/p.jpg',
-            'discount' => 5
-        ],
-        [
-            'brand' => 'Mercedes',
-            'model' => 'C Class',
-            'price' => 35000,
-            'year' => 2019,
-            'image' => 'Mercedes-Benz/C-class/coupe/c2.jfif',
-            'discount' => 5
-        ],
-        [
-            'brand' => 'BMW',
-            'model' => 'M3',
-            'price' => 75000,
-            'year' => 2023,
-            'image' => 'BMW/M3/m3/b2.jpg',
-            'discount' => 5
-        ],
-        [
-            'brand' => 'Audi',
-            'model' => 'RS7',
-            'price' => 65000,
-            'year' => 2020,
-            'image' => 'Audi/A7/rs7/a9.jfif',
-            'discount' => 5
-        ],
-        [
-            'brand' => 'Rolls Royce',
-            'model' => 'Phantom',
-            'price' => 295000,
-            'year' => 2021,
-            'image' => 'Rolls Royce/phantom/r.jpg',
-            'discount' => 5
-        ]
-    ];
-
-    function isValidEmail($email)
-    {
-        return preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email);
-    }
-
-    function isValidDate($date)
-    {
-        return preg_match('/^\d{4}-\d{2}-\d{2}$/', $date);
-    }
-
-    function isValidNumber($number)
-    {
-        return preg_match('/^\d+$/', $number);
-    }
-
     class Car
     {
+        private $id;
         private $brand;
         private $model;
         private $price;
         private $image;
+        private $discount;
 
-        public function __construct($brand, $model, $price, $image)
+        public function __construct($id, $brand, $model, $price, $image, $discount = 0)
         {
+            $this->id = $id;
             $this->brand = $brand;
             $this->model = $model;
             $this->price = $price;
             $this->image = $image;
+            $this->discount = $discount;
+        }
+
+        public function getId() {
+            return $this->id;
         }
 
         public function getBrand()
@@ -149,27 +224,38 @@
             return $this->image;
         }
 
-        public function setPrice($newPrice)
+        public function getDiscount()
         {
-            if ($newPrice > 0) {
-                $this->price = $newPrice;
-                return true;
-            }
-            return false;
+            return $this->discount;
+        }
+
+        public function getDiscountedPrice()
+        {
+            return $this->price * (1 - $this->discount / 100);
         }
 
         public function getFormattedPrice()
         {
             return '$' . number_format($this->price, 2);
         }
-    }
 
+        public function getFormattedDiscountedPrice()
+        {
+            return '$' . number_format($this->getDiscountedPrice(), 2);
+        }
+    }
 
     $car_objects = [];
     foreach ($car_deals as $deal) {
-        $car_objects[] = new Car($deal['brand'], $deal['model'], $deal['price'], $deal['image']);
+        $car_objects[] = new Car(
+            $deal['car_id'],
+            $deal['make'],
+            $deal['model'],
+            $deal['base_price'],
+            $deal['image_url'],
+            $deal['discount']
+        );
     }
-
 
     usort($car_objects, function ($a, $b) {
         return $a->getPrice() <=> $b->getPrice();
@@ -193,10 +279,16 @@
                     <div>
                         <ul>
                             <li class="login-text trigger-favorites"><a href="#"><i class="fa-regular fa-heart"></i>Favorite cars</a></li>
-                            <input id="button" type="submit" value="Login" onclick="window.location.href='login.php';">
+                            <?php if ($isLoggedIn): ?>
+                                <input id="button" type="submit" value="Logout" onclick="window.location.href='logout.php';">
+                            <?php else: ?>
+                                <input id="button" type="submit" value="Login" onclick="window.location.href='login.php';">
+                            <?php endif; ?>
                             <li>
                                 <div class="sign-up">
-                                    <a>Don't have an account?</a> <a href="register.php" class="sign" style="color: <?php echo PRIMARY_COLOR; ?>;text-decoration: none; font-weight: 500;"> <br> Sign up</a>
+                                    <?php if (!$isLoggedIn): ?>
+                                        <a>Don't have an account?</a> <a href="register.php" class="sign" style="color: <?php echo PRIMARY_COLOR; ?>;text-decoration: none; font-weight: 500;"> <br> Sign up</a>
+                                    <?php endif; ?>
                                 </div>
                             </li>
                         </ul>
@@ -221,13 +313,23 @@
 
                 <li class="dropdown">
                     <div>
-                        <a href="#" class="dropbtn"><i class="fa-regular fa-user"></i>Login</a>
+                        <?php if ($isLoggedIn): ?>
+                            <a href="#" class="dropbtn"><i class="fa-regular fa-user"></i><?php echo htmlspecialchars($_SESSION['user']); ?></a>
+                        <?php else: ?>
+                            <a href="#" class="dropbtn"><i class="fa-regular fa-user"></i>Login</a>
+                        <?php endif; ?>
                         <ul class="dropdown-content">
                             <li class="login-text trigger-favorites"><a href="#"><i class="fa-regular fa-heart"></i>Favorite cars</a></li>
-                            <input id="button" type="submit" value="Login" onclick="window.location.href='login.php';">
+                            <?php if ($isLoggedIn): ?>
+                                <input id="button" type="submit" value="Logout" onclick="window.location.href='logout.php';">
+                            <?php else: ?>
+                                <input id="button" type="submit" value="Login" onclick="window.location.href='login.php';">
+                            <?php endif; ?>
                             <li>
                                 <div class="sign-up">
-                                    <a>Don't have an account?</a> <a href="register.php" class="sign" style="color: <?php echo PRIMARY_COLOR; ?>;text-decoration: none; font-weight: 500;"> <br> Sign up</a>
+                                    <?php if (!$isLoggedIn): ?>
+                                        <a>Don't have an account?</a> <a href="register.php" class="sign" style="color: <?php echo PRIMARY_COLOR; ?>;text-decoration: none; font-weight: 500;"> <br> Sign up</a>
+                                    <?php endif; ?>
                                 </div>
                             </li>
                         </ul>
@@ -273,27 +375,87 @@
     <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
     <div id="available-cars" style="padding: 20px; margin-top: 20px; background: white;">
-    <h3 style="text-align: center; font-size: 2.8rem">Deals of the Week</h3>
-    <div id="cars-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-        <?php foreach ($car_objects as $car): ?>
-            <?php
-                $previewPage = strtolower(str_replace(' ', '-', $car->getBrand() . '-' . $car->getModel())) . '-preview.php';
-            ?>
-            <div class="car-card" style="width: 300px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <a href="<?php echo $previewPage; ?>">
-                    <img src="<?php echo $car->getImage(); ?>" alt="<?php echo $car->getBrand() . ' ' . $car->getModel(); ?>" style="width: 100%; height: 200px; object-fit: cover;">
-                </a>
+        <h3 style="text-align: center; font-size: 2.8rem">Deals of the Week</h3>
+        
+        <?php if ($isAdmin): ?>
+        <div class="admin-controls">
+            <h4>Admin Controls</h4>
+            <form method="post" class="deal-form">
+                <input type="hidden" name="action" value="add_deal">
+                <select name="car_id" required style="flex-grow: 1;">
+                    <option value="">Select Car</option>
+                    <?php foreach ($all_cars as $car): ?>
+                        <?php if (!$car['is_deal_of_week']): ?>
+                            <option value="<?php echo $car['car_id']; ?>">
+                                <?php echo $car['make'] . ' ' . $car['model'] . ' ($' . number_format($car['base_price'], 2) . ')'; ?>
+                            </option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+                <input type="number" name="discount" min="1" max="50" placeholder="Discount %" required style="width: 100px;">
+                <button type="submit" style="background: <?php echo PRIMARY_COLOR; ?>; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer;">Add to Deals</button>
+            </form>
+        </div>
+        <?php endif; ?>
+        
+        <div id="cars-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+            <?php foreach ($car_objects as $car): ?>
+                <?php
+                    $previewPage = strtolower(str_replace(' ', '-', $car->getBrand() . '-' . $car->getModel())) . '-preview.php';
+                    $isFavorite = $isLoggedIn && in_array($car->getId(), $userFavorites);
+                ?>
+                <div class="car-card" style="width: 300px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <a href="<?php echo $previewPage; ?>">
+                        <img src="<?php echo $car->getImage(); ?>" alt="<?php echo $car->getBrand() . ' ' . $car->getModel(); ?>" style="width: 100%; height: 200px; object-fit: cover;">
+                    </a>
 
-                <div style="padding: 15px;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 1.2rem;"><?php echo $car->getBrand() . ' ' . $car->getModel(); ?></h4>
-                    <p style="margin: 5px 0; color: #555;">Price: <?php echo $car->getFormattedPrice(); ?></p>
-                    <button class="add-to-favorites" data-brand="<?php echo $car->getBrand(); ?>" data-model="<?php echo $car->getModel(); ?>" data-price="<?php echo $car->getPrice(); ?>" data-image="<?php echo $car->getImage(); ?>" style="background: <?php echo PRIMARY_COLOR; ?>; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; margin-top: 10px;">Add to Favorites</button>
+                    <div style="padding: 15px;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 1.2rem;"><?php echo $car->getBrand() . ' ' . $car->getModel(); ?></h4>
+                        <?php if ($car->getDiscount() > 0): ?>
+                            <p style="margin: 5px 0; color: #555;">
+                                <span class="original-price"><?php echo $car->getFormattedPrice(); ?></span>
+                                <span class="discounted-price"> <?php echo $car->getFormattedDiscountedPrice(); ?></span>
+                                <span class="discount-badge"> (<?php echo $car->getDiscount(); ?>% off)</span>
+                            </p>
+                        <?php else: ?>
+                            <p style="margin: 5px 0; color: #555;">Price: <?php echo $car->getFormattedPrice(); ?></p>
+                        <?php endif; ?>
+                        
+                        <?php if ($isLoggedIn): ?>
+                            <button class="add-to-favorites" 
+                                    data-id="<?php echo $car->getId(); ?>" 
+                                    data-brand="<?php echo $car->getBrand(); ?>" 
+                                    data-model="<?php echo $car->getModel(); ?>" 
+                                    data-price="<?php echo $car->getPrice(); ?>" 
+                                    data-image="<?php echo $car->getImage(); ?>"
+                                    <?php echo $isFavorite ? 'style="display:none;"' : ''; ?>>
+                                <i class="fa-regular fa-heart"></i> Add to Favorites
+                            </button>
+                            <button class="remove-favorite" 
+                                    data-id="<?php echo $car->getId(); ?>"
+                                    <?php echo !$isFavorite ? 'style="display:none;"' : ''; ?>>
+                                <i class="fa-solid fa-heart" style="color: red;"></i> Remove Favorite
+                            </button>
+                        <?php else: ?>
+                            <button onclick="window.location.href='login.php';" style="background: <?php echo PRIMARY_COLOR; ?>; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; margin-top: 10px; width: 100%;">
+                                <i class="fa-regular fa-heart"></i> Login to Favorite
+                            </button>
+                        <?php endif; ?>
+                        
+                        <?php if ($isAdmin): ?>
+                            <form method="post" style="margin-top: 10px;">
+                                <input type="hidden" name="action" value="remove_deal">
+                                <input type="hidden" name="car_id" value="<?php echo $car->getId(); ?>">
+                                <button type="submit" style="background: #ff4444; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; width: 100%;">
+                                    <i class="fa-solid fa-tag"></i> Remove from Deals
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
     </div>
-</div>
-
 
     <section id="car-security" style="background-image: url(bmwm4.jpg);position: relative;background-size: cover;background-position: center ; padding: 30px 20px;">
         <div class="container">
@@ -310,175 +472,126 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const menuIcon = document.getElementById("menu-icon");
-            const menu = document.getElementById("menu");
-            const overlay = document.getElementById("overlay1");
 
-            function toggleMenu() {
-                menu.classList.toggle("active");
-                overlay.classList.toggle("active");
-            }
+const favoritesModal = document.getElementById("favorites-modal");
+const overlayEl = document.getElementById("overlay");
+const closeFavorites = document.getElementById("close-favorites");
+const favoritesContainer = document.getElementById("favorites-container");
+const triggerFavorites = document.querySelectorAll(".trigger-favorites");
 
-            menuIcon.addEventListener("click", toggleMenu);
-            overlay.addEventListener("click", toggleMenu);
-
-            const models = <?php echo json_encode($models); ?>;
-
-            let selectedBrand = "";
-            let selectedModel = "";
-
-            const combinations = {
-                "mercedes": "Mercedes.php",
-                "mercedes-c-class": "mercedesC.php",
-                "mercedes-e-class": "mercedesE.php",
-                "mercedes-s-class": "mercedesS.php",
-                "mercedes-g-class": "mercedesG.php",
-                "bmw": "BMW.php",
-                "bmw-series-3": "bmwm3.php",
-                "bmw-series-4": "bmwm4.php",
-                "bmw-series-7": "bmw7.php",
-                "bmw-series-8": "bmw8.php",
-                "audi": "Audi.php",
-                "audi-a3": "audia3.php",
-                "audi-a6": "audia3.php",
-                "audi-a7": "audi7.php",
-                "audi-a8": "audi8.php",
-                "porsche": "Porsche.php",
-                "porsche-911": "porsche911.php",
-                "porsche-taycan": "porschetaycan.php",
-                "rollsroyce": "RollsRoyce.php",
-                "rollsroyce-dawn": "rollsroycedawn.php",
-                "rollsroyce-ghost": "rollsroyceghost.php",
-                "rollsroyce-phantom": "rollsroycephantom.php",
-                "rollsroyce-wraith": "rollsroycewraith.php",
-            };
-
-            document.querySelectorAll("#brandMenu a").forEach(item => {
-                item.addEventListener("click", function(e) {
-                    e.preventDefault();
-                    selectedBrand = this.dataset.brand;
-                    document.getElementById("brandButton").textContent = selectedBrand;
-
-                    const modelList = models[selectedBrand] || [];
-                    const modelMenu = document.getElementById("modelMenu");
-                    modelMenu.innerHTML = modelList.map(model => `<li><a href="#" data-model="${model}">${model}</a></li>`).join("");
-                    document.getElementById("modelButton").textContent = "Model";
-                    modelMenu.style.display = "none";
-                });
-            });
-
-            document.getElementById("modelMenu").addEventListener("click", function(e) {
-                if (e.target.tagName === "A") {
-                    e.preventDefault();
-                    selectedModel = e.target.dataset.model;
-                    document.getElementById("modelButton").textContent = selectedModel;
-                }
-            });
-
-            document.getElementById("extrapart").addEventListener("click", function() {
-                let key = "";
-
-                if (selectedBrand) {
-                    key = selectedBrand.toLowerCase().replace(/\s+/g, '-');
-                    if (selectedModel) {
-                        key += '-' + selectedModel.toLowerCase().replace(/\s+/g, '-');
-                    }
-                }
-
-                if (!selectedBrand && !selectedModel) {
-                    window.location.href = "cars.php";
-                } else if (combinations[key]) {
-                    window.location.href = combinations[key];
-                } else {
-                    alert("No page found for this combination. Please select valid options.");
-                }
-            });
-
-            document.querySelectorAll(".btnMenu").forEach(button => {
-                button.addEventListener("click", function() {
-                    const menuId = this.id.replace("Button", "Menu");
-                    const menu = document.getElementById(menuId);
-                    const isVisible = menu.style.display === "block";
-                    document.querySelectorAll(".Menu").forEach(menu => (menu.style.display = "none"));
-                    menu.style.display = isVisible ? "none" : "block";
-                });
-            });
-
-            const favoritesModal = document.getElementById("favorites-modal");
-            const overlayEl = document.getElementById("overlay");
-            const closeFavorites = document.getElementById("close-favorites");
-            const favoritesContainer = document.getElementById("favorites-container");
-            const triggerFavorites = document.querySelectorAll(".trigger-favorites");
-
-            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-
-            function updateFavoritesDisplay() {
-                favoritesContainer.innerHTML = favorites.length > 0 ?
-                    favorites.map(car => `
-            <div class="favorite-car" style="width: 200px; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-                <img src="${car.image}" alt="${car.brand} ${car.model}" style="width: 100%; height: 120px; object-fit: cover;">
-                <h4>${car.brand} ${car.model}</h4>
-                <p>Price: $${car.price.toLocaleString()}</p>
-                <button class="remove-favorite" data-brand="${car.brand}" data-model="${car.model}" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Remove</button>
-            </div>
-        `).join("") :
-                    "<p>No favorite cars yet.</p>";
-
-                document.querySelectorAll(".remove-favorite").forEach(button => {
-                    button.addEventListener("click", function() {
-                        const brand = this.dataset.brand;
-                        const model = this.dataset.model;
-                        favorites = favorites.filter(car => !(car.brand === brand && car.model === model));
-                        localStorage.setItem("favorites", JSON.stringify(favorites));
-                        updateFavoritesDisplay();
-                    });
-                });
-            }
-            triggerFavorites.forEach(trigger => {
-                trigger.addEventListener("click", function(e) {
-                    e.preventDefault();
-                    favoritesModal.style.display = "block";
-                    overlayEl.style.display = "block";
-                    updateFavoritesDisplay();
-                });
-            });
-
-            closeFavorites.addEventListener("click", function() {
-                favoritesModal.style.display = "none";
-                overlayEl.style.display = "none";
-            });
-
-            overlayEl.addEventListener("click", function() {
-                favoritesModal.style.display = "none";
-                this.style.display = "none";
-            });
-
-            document.querySelectorAll(".add-to-favorites").forEach(button => {
-                button.addEventListener("click", function() {
-                    const brand = this.dataset.brand;
-                    const model = this.dataset.model;
-                    const price = parseFloat(this.dataset.price);
-                    const image = this.dataset.image;
-
-                    const exists = favorites.some(car => car.brand === brand && car.model === model);
-
-                    if (!exists) {
-                        favorites.push({
-                            brand,
-                            model,
-                            price,
-                            image
+function fetchAndDisplayFavorites() {
+    <?php if ($isLoggedIn): ?>
+        fetch('get_favorites.php')
+            .then(response => response.json())
+            .then(favorites => {
+                if (favorites.length > 0) {
+                    favoritesContainer.innerHTML = favorites.map(car => `
+                        <div class="favorite-car" style="width: 200px; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                            <img src="${car.image_url}" alt="${car.make} ${car.model}" style="width: 100%; height: 120px; object-fit: cover;">
+                            <h4>${car.make} ${car.model}</h4>
+                            <p>Price: $${car.base_price.toLocaleString()}</p>
+                            <button class="remove-favorite" data-id="${car.car_id}" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; width: 100%;">
+                                <i class="fa-solid fa-heart"></i> Remove
+                            </button>
+                        </div>
+                    `).join("");
+                    
+                    document.querySelectorAll(".remove-favorite").forEach(button => {
+                        button.addEventListener("click", function() {
+                            const carId = this.dataset.id;
+                            removeFavorite(carId);
                         });
-                        localStorage.setItem("favorites", JSON.stringify(favorites));
-                        alert(`${brand} ${model} added to favorites!`);
-                    } else {
-                        alert(`${brand} ${model} is already in your favorites!`);
-                    }
-                });
+                    });
+                } else {
+                    favoritesContainer.innerHTML = "<p>No favorite cars yet.</p>";
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching favorites:', error);
+                favoritesContainer.innerHTML = "<p>Error loading favorites. Please try again.</p>";
             });
+    <?php else: ?>
+        favoritesContainer.innerHTML = "<p>Please login to view your favorites.</p>";
+    <?php endif; ?>
+}
+
+function removeFavorite(carId) {
+    <?php if ($isLoggedIn): ?>
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `favorite_action=remove&car_id=${carId}&ajax=true`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                fetchAndDisplayFavorites();
+                document.querySelector(`.add-to-favorites[data-id="${carId}"]`).style.display = 'block';
+                document.querySelector(`.remove-favorite[data-id="${carId}"]`).style.display = 'none';
+            }
         });
+    <?php else: ?>
+        alert("Please login to manage favorites.");
+    <?php endif; ?>
+}
+
+triggerFavorites.forEach(trigger => {
+    trigger.addEventListener("click", function(e) {
+        e.preventDefault();
+        favoritesModal.style.display = "block";
+        overlayEl.style.display = "block";
+        fetchAndDisplayFavorites();
+    });
+});
+
+closeFavorites.addEventListener("click", function() {
+    favoritesModal.style.display = "none";
+    overlayEl.style.display = "none";
+});
+
+overlayEl.addEventListener("click", function() {
+    favoritesModal.style.display = "none";
+    this.style.display = "none";
+});
+
+document.querySelectorAll(".add-to-favorites").forEach(button => {
+    button.addEventListener("click", function() {
+        const carId = this.dataset.id;
+        
+        <?php if ($isLoggedIn): ?>
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `favorite_action=add&car_id=${carId}&ajax=true`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.style.display = 'none';
+                    document.querySelector(`.remove-favorite[data-id="${carId}"]`).style.display = 'block';
+                    if (favoritesModal.style.display === "block") {
+                        fetchAndDisplayFavorites();
+                    }
+                }
+            });
+        <?php else: ?>
+            window.location.href = 'login.php';
+        <?php endif; ?>
+    });
+});
+
+document.querySelectorAll(".remove-favorite").forEach(button => {
+    button.addEventListener("click", function() {
+        const carId = this.dataset.id;
+        removeFavorite(carId);
+        this.style.display = 'none';
+        document.querySelector(`.add-to-favorites[data-id="${carId}"]`).style.display = 'block';
+    });
+});
     </script>
 </body>
-
 </html>
