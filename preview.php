@@ -85,10 +85,10 @@ $car['total_price'] = number_format(
                 <div class="slideshow">
                     <?php foreach ($images as $index => $img): ?>
                         <img src="<?= htmlspecialchars($img) ?>"
-                             class="<?= $index === 0 ? 'active' : '' ?>"
-                             alt="Slide <?= $index + 1 ?>"
-                             data-index="<?= $index ?>"
-                             onclick="openSlideshow(<?= $carId ?>, <?= $index ?>)">
+                            class="<?= $index === 0 ? 'active' : '' ?>"
+                            alt="Slide <?= $index + 1 ?>"
+                            data-index="<?= $index ?>"
+                            onclick="openSlideshow(<?= $carId ?>, <?= $index ?>)">
                     <?php endforeach; ?>
                 </div>
                 <div class="controls">
@@ -119,7 +119,6 @@ $car['total_price'] = number_format(
                     });
 
                     function openSlideshow(carId, startIndex) {
-                        // Hap në të njëjtën tab, duke kaluar car_id dhe slide si parametra GET
                         window.location.href = `slideshow.php?car_id=${carId}&slide=${startIndex + 1}`;
                     }
                 </script>
@@ -193,7 +192,16 @@ $car['total_price'] = number_format(
             .then(data => document.getElementById('Footer').innerHTML = data);
 
         function redirect() {
-            window.location.href = "payment.php";
+            fetch('check_login.php')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.logged_in) {
+                        window.location.href = "payment.php?car_id=<?= $carId ?>";
+                    } else {
+                        alert("Ju lutem kyçuni në llogarinë tuaj për të vazhduar me blerjen.");
+                        window.location.href = "login.php";
+                    }
+                });
         }
     </script>
 </body>
