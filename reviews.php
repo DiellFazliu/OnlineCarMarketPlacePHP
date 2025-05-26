@@ -1,80 +1,16 @@
 <?php
-$name = "Car Reviewer";
-$rating = 5;
-define("SITE_TITLE", "Car Reviews");
+session_start();
+require 'db.php';
 
+define("SITE_TITLE", "Car Reviews");
 $userIP = $_SERVER['REMOTE_ADDR'];
 
-$numericArray = [5, 3, 1, 4, 2];
-$assocArray = ["Elira" => 4, "Arben" => 5];
-$multiArray = [
-    ["name" => "Arben", "rating" => 5],
-    ["name" => "Elira", "rating" => 4],
-];
-
-sort($numericArray);
-arsort($assocArray);
-
-$comment = "Great car!!";
-$commentLength = strlen($comment);
-
-function averageRating($array) {
-    $sum = 0;
-    foreach ($array as $entry) {
-        $sum += $entry['rating'];
-    }
-    return $sum / count($array);
-}
-
-class Review {
-    private $name;
-    private $rating;
-    private $comment;
-
-    public function __construct($name, $rating, $comment) {
-        $this->name = $name;
-        $this->rating = $rating;
-        $this->comment = $comment;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getRating() {
-        return $this->rating;
-    }
-
-    public function getComment() {
-        return $this->comment;
-    }
-
-    public function __destruct() {}
-}
-
-class VerifiedReview extends Review {
-    public function isVerified() {
-        return true;
-    }
-}
-
-function isValidEmail($email) {
-    return preg_match("/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$/", $email);
-}
-
-function isValidDate($date) {
-    return preg_match("/^\d{4}-\d{2}-\d{2}$/", $date);
-}
-
-function isNumericValue($val) {
-    return preg_match("/^\d+$/", $val);
-}
-
 function sanitizeString($input) {
-    return preg_replace("/[^a-zA-Z0-9\s]/", "", $input);
+    return preg_replace("/[^a-zA-Z0-9\s]/", "", trim($input));
 }
-?>
 
+$loggedIn = isset($_SESSION['user_id']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,6 +21,7 @@ function sanitizeString($input) {
     <script src="modal.js" defer></script>
 </head>
 <body>
+
 <div class="menu-container">
     <button class="menu-button" onclick="toggleMenu()">☰ Menu</button>
     <div class="menu-content" id="menuContent">
@@ -107,8 +44,16 @@ function sanitizeString($input) {
 </div>
 
 <p style="padding: 10px; background-color: #f4f4f4;">
-    Welcome, <?= $name ?>! | Your IP: <?= $userIP ?><br>
-    Average rating from PHP: <?= number_format(averageRating($multiArray), 1) ?>/5
+    Welcome, <?= htmlspecialchars($_SESSION['username'] ?? 'Guest') ?>! | Your IP: <?= htmlspecialchars($userIP) ?><br>
+    <?php
+    try {
+        $stmt = $db->query("SELECT AVG(rating) AS avg_rating FROM Reviews");
+        $avg = $stmt->fetchColumn();
+        echo "Average rating from DB: " . number_format($avg, 1) . "/5";
+    } catch (PDOException $e) {
+        echo "Average rating unavailable";
+    }
+    ?>
 </p>
 
 <section id="reviews-section">
@@ -121,26 +66,35 @@ function sanitizeString($input) {
 
     <div id="reviews-list" class="reviews-container">
         <?php
-        $reviews = [
-            new VerifiedReview("Arben D.", 5, "The car was in perfect condition, I highly recommend!"),
-            new VerifiedReview("Elira K.", 4, "Service was good, but the car had minor issues.")
-        ];
-        foreach ($reviews as $rev) {
-            echo "<div class='review-item'>";
-            echo "<p><strong>Name:</strong> " . $rev->getName() . "</p>";
-            echo "<p><strong>Rating:</strong> " . str_repeat("⭐️", $rev->getRating()) . " ({$rev->getRating()}/5)</p>";
-            echo "<p><strong>Comment:</strong> \"" . $rev->getComment() . "\"</p>";
-            echo "<p class='review-date'>Published on: " . date("F j, Y") . "</p>";
-            echo "</div>";
+        try {
+            $stmt = $db->query("SELECT r.content, r.rating, r.created_at, u.username 
+                                FROM Reviews r 
+                                LEFT JOIN Users u ON r.user_id = u.user_id 
+                                ORDER BY r.created_at DESC");
+            $fetchedReviews = $stmt->fetchAll();
+
+            foreach ($fetchedReviews as $rev) {
+                $name = htmlspecialchars($rev['username'] ?? 'Anonymous');
+                $rating = intval($rev['rating']);
+                $comment = htmlspecialchars($rev['content']);
+                $date = date("F j, Y", strtotime($rev['created_at']));
+
+                echo "<div class='review-item'>";
+                echo "<p><strong>Name:</strong> $name</p>";
+                echo "<p><strong>Rating:</strong> " . str_repeat("⭐️", $rating) . " ($rating/5)</p>";
+                echo "<p><strong>Comment:</strong> \"$comment\"</p>";
+                echo "<p class='review-date'>Published on: $date</p>";
+                echo "</div>";
+            }
+        } catch (PDOException $e) {
+            echo "<p>Error loading reviews: " . htmlspecialchars($e->getMessage()) . "</p>";
         }
         ?>
     </div>
 
+    <?php if ($loggedIn): ?>
     <h3 class="form-title">Write a Review</h3>
     <form id="review-form" class="review-form" method="POST" action="">
-        <label for="review-name">Your Name:</label>
-        <input type="text" name="review-name" id="review-name" required>
-
         <label for="review-rating">Rating (1-5):</label>
         <select name="review-rating" id="review-rating" required>
             <option value="5">5 - Excellent</option>
@@ -155,19 +109,34 @@ function sanitizeString($input) {
 
         <button type="submit" class="submit-btn">Submit Review</button>
     </form>
+    <?php else: ?>
+        <p style="color: red; padding: 10px;">You must be logged in to submit a review.</p>
+    <?php endif; ?>
 
     <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $username = sanitizeString($_POST['review-name']);
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && $loggedIn) {
+        $user_id = $_SESSION['user_id'];
+        $username = $_SESSION['user'];
         $rating = intval($_POST['review-rating']);
         $text = sanitizeString($_POST['review-text']);
 
-        echo "<div class='review-item' style='background:#e8f5e9; padding:10px; margin-top:20px;'>";
-        echo "<p><strong>New Review Submitted:</strong></p>";
-        echo "<p><strong>Name:</strong> $username</p>";
-        echo "<p><strong>Rating:</strong> " . str_repeat("⭐️", $rating) . " ($rating/5)</p>";
-        echo "<p><strong>Comment:</strong> \"$text\"</p>";
-        echo "</div>";
+        try {
+            $stmt = $db->prepare("INSERT INTO Reviews (user_id, content, rating) VALUES (:user_id, :content, :rating)");
+            $stmt->execute([
+                'user_id' => $user_id,
+                'content' => $text,
+                'rating' => $rating
+            ]);
+
+            echo "<div class='review-item' style='background:#e8f5e9; padding:10px; margin-top:20px;'>";
+            echo "<p><strong>New Review Submitted:</strong></p>";
+            echo "<p><strong>Name:</strong> " . htmlspecialchars($username) . "</p>";
+            echo "<p><strong>Rating:</strong> " . str_repeat("⭐️", $rating) . " ($rating/5)</p>";
+            echo "<p><strong>Comment:</strong> \"" . htmlspecialchars($text) . "\"</p>";
+            echo "</div>";
+        } catch (PDOException $e) {
+            echo "<p style='color:red;'>Error submitting review: " . htmlspecialchars($e->getMessage()) . "</p>";
+        }
     }
     ?>
 </section>
